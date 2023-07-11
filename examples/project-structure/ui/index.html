@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<title>Emoji Picker Desktop App in under 50 lines of Code</title>
+		<link rel="stylesheet" href="./style.css" />
+	</head>
+	<body>
+		<div id="container">
+			<h1>V webview examples</h1>
+			<hr />
+			<div>
+				<h2>1. Simple V function Call</h2>
+				<button onclick="handleToggle()">Toggle Setting <span id="toggle-state">on</span></button>
+			</div>
+			<div>
+				<h2>2. Sent data to V</h2>
+				<form id="login">
+					<input placeholder="What's your name?" type="text" />
+					<button type="submit">Submit</button>
+				</form>
+				<sub id="submit-info"></sub>
+			</div>
+			<div>
+				<h2>3. Async operation in V</h2>
+				<div>
+					<h3>Simple things</h3>
+					<p>Breathe some air. Drink some water. Write some code.</p>
+				</div>
+				<button onclick="fetchArticle()">Fetch Article</button>
+			</div>
+		</div>
+		<script src="./main.js"></script>
+	</body>
+</html>

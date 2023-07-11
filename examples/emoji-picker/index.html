@@ -1,0 +1,53 @@
+<html>
+	<head>
+		<title>Emoji Picker Desktop App</title>
+		<style>
+			body {
+				margin: 0;
+			}
+			em-emoji-picker {
+				width: 100%;
+				height: 100vh;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--rgb-teal: 162, 234, 233;
+					--rgb-background: 21, 21, 21;
+				}
+				body {
+					background-color: rgb(var(--rgb-background));
+				}
+				em-emoji-picker {
+					--rgb-accent: var(--rgb-teal);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Add picker from cdn script -->
+		<script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js"></script>
+		<script>
+			// Handle emoji selection
+			function handleSelect(e) {
+				navigator.clipboard.writeText(e.native);
+				// Example V function call
+				window.play_sound();
+			}
+			const pickerOptions = {
+				onEmojiSelect: handleSelect,
+				emojiButtonColors: ['rgb(var(--rgb-teal))'],
+				parent: document.querySelector('#picker'),
+				dynamicWidth: true,
+			};
+			const picker = new EmojiMart.Picker(pickerOptions);
+			document.body.appendChild(picker);
+			// Add ctrl+f search keymap
+			const shadowRoot = document.querySelector('em-emoji-picker').shadowRoot;
+			document.addEventListener('keydown', (e) => {
+				if (e.ctrlKey && e.key === 'f') {
+					shadowRoot.querySelector('div.search input').focus();
+				}
+			});
+		</script>
+	</body>
+</html>

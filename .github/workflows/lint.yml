@@ -1,0 +1,44 @@
+name: Lint
+
+on:
+  workflow_call:
+
+env:
+  MOD_PATH: ~/.vmodules/webview
+
+jobs:
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore Cache
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            vlang
+            ~/.vmodules
+          key: ${{ runner.os }}-${{ github.sha }}
+          fail-on-cache-miss: true
+
+      - name: Setup V
+        uses: vlang/setup-v@v1.3
+
+      - name: Check Formatting
+        run: v fmt -verify ${{ env.MOD_PATH }}
+
+  vet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore Cache
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            vlang
+            ~/.vmodules
+          key: ${{ runner.os }}-${{ github.sha }}
+          fail-on-cache-miss: true
+
+      - name: Setup V
+        uses: vlang/setup-v@v1.3
+
+      - name: Run Vet
+        run: v vet -W ${{ env.MOD_PATH }}/src/

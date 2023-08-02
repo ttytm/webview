@@ -56,7 +56,7 @@ Before the first use, we need to build the webview C library to which we are goi
 
 ### Usage Example
 
-```v
+```v ignore
 import webview
 
 struct App {
@@ -76,7 +76,7 @@ const html = '<!DOCTYPE html>
 	</head>
 	<body>
 		<h1>My App Content!</h1>
-		<button onclick="my_v_func()">Call V, Baby.</button>
+		<button onclick="my_v_func()">Call V!</button>
 	</body>
 </html>'
 
@@ -85,7 +85,7 @@ fn my_v_func(event_id &char, args &char, app &App) {
 }
 
 mut app := App{
-	w: webview.create(true)
+	w: webview.create(debug: true)
 }
 app.w.bind('my_v_func', my_v_func, app)
 app.w.set_html(html)

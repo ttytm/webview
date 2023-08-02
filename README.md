@@ -88,6 +88,7 @@ mut app := App{
 	w: webview.create(debug: true)
 }
 app.w.bind('my_v_func', my_v_func, app)
+app.w.set_size(600, 400, .@none)
 app.w.set_html(html)
 app.w.run()
 ```

@@ -8,6 +8,7 @@ on:
 
 env:
   REPO_NAME: ${{ github.event.repository.name }}
+  MOD_PATH: ~/.vmodules/webview
 
 jobs:
   check-docs:
@@ -15,6 +16,12 @@ jobs:
     steps:
       - name: Setup V
         uses: vlang/setup-v@v1.3
+
+      - name: Setup Dependencies
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libgtk-3-dev libwebkit2gtk-4.0-dev
+          version: 1.0
 
       - name: Checkout ${{ env.REPO_NAME }}
         uses: actions/checkout@v3

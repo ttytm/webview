@@ -94,6 +94,5 @@ app.w.run()
 
 Extended examples can be found in the [examples](https://github.com/ttytm/webview/tree/master/examples) directory.
 
-An overview of exported functions can be found in the repositories
-[`src/lib.v`](https://github.com/ttytm/webview/blob/master/src/lib.v) file and on its
-[vdoc](https:///home/turiiya/.vmodules/webview/_docs-keys/webview.html) site.
+An overview of exported functions can be found in the repositories [`src/lib.v`](https://github.com/ttytm/webview/blob/master/src/lib.v)
+file and on its [vdoc](https://ttytm.github.io/webview/) site.

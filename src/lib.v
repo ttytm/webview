@@ -136,3 +136,17 @@ pub fn (w &Webview) unbind(name string) {
 pub fn (w &Webview) result(event_id &char, json_result string) {
 	C.webview_return(w, event_id, 0, &char(json_result.str))
 }
+
+// copy_char copies a C style string. The functions main use case is passing an `event_id &char`
+// to another thread. It helps to keep the `event_id` available when executing `webview.result`
+// from the spawned thread. Without cloning the `event_id` might get obscured during garbage
+// collection and using it in a `webview.result` wouldn't return data to the calling JS function.
+// Example:
+// ```v
+// fn fetch_data(event_id &char, raw_args &char, app &App) {
+// 	spawn app.fetch_data(webview.c_copy(event_id))
+// }
+// ```
+pub fn copy_char(s &char) &char {
+	return unsafe { &char(cstring_to_vstring(s).str) }
+}

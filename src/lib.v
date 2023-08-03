@@ -91,7 +91,7 @@ pub fn (w &Webview) set_size(width int, height int, hint Hint) {
 // navigate navigates webview to the given URL. URL may be a properly encoded data URI.
 // Example: w.navigate('https://github.com/webview/webview') {
 // Example: w.navigate('data:text/html,%3Ch1%3EHello%3C%2Fh1%3E')
-// Example: w.navigate('file:///home/username/.vmodules/webview/examples/emoji-picker/index.html')
+// Example: w.navigate('file://${@VMODROOT}/index.html')
 pub fn (w &Webview) navigate(url string) {
 	C.webview_navigate(w, &char(url.str))
 }

@@ -53,11 +53,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        compiler: [tcc, gcc]
-        optimization: ['', -cstrict]
+        compiler: [tcc, gcc, clang]
+        optimization: ['']
         example: ['emoji-picker/main.v', 'v-js-interop/', 'project-structure/']
         exclude:
-          - compiler: tcc
+          - compiler: clang
             optimization: -cstrict
       fail-fast: false
     steps:

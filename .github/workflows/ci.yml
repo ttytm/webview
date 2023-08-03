@@ -82,7 +82,7 @@ jobs:
       - name: Build
         run: v -cg -cc ${{ matrix.compiler }} ${{ matrix.optimization }} ${{ env.MOD_PATH }}/examples/${{ matrix.example }}
 
-  build-sanitized:
+  build-gcc-sanitized:
     needs: build
     runs-on: ubuntu-latest
     strategy:
@@ -111,4 +111,32 @@ jobs:
           version: 1.0
 
       - name: Build
-        run: v -cc gcc ${{ matrix.sanitizer }} ${{ env.MOD_PATH }}/examples/emoji-picker/main.v
+        run: v -cc gcc ${{ matrix.sanitizer }} ${{ env.MOD_PATH }}/examples/project-structure/
+
+  build-clang-sanitized:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sanitizer: [address, memory, leak]
+    steps:
+      - name: Restore Cache
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            vlang
+            ~/.vmodules
+          key: ${{ runner.os }}-${{ github.sha }}
+          fail-on-cache-miss: true
+
+      - name: Setup V
+        uses: vlang/setup-v@v1.3
+
+      - name: Setup Dependencies
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libgtk-3-dev libwebkit2gtk-4.0-dev
+          version: 1.0
+
+      - name: Build
+        run: v -cc clang -cflags -fsanitize=${{ matrix.sanitizer }} ${{ env.MOD_PATH }}/examples/project-structure/

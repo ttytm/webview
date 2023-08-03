@@ -1,5 +1,5 @@
 import json
-import webview
+import webview { copy_char }
 
 fn (mut app App) bind() {
 	// The first string arg names the functions for JS usage. E.g. use JS's `camelCase` convention if you prefer it.
@@ -43,9 +43,7 @@ fn login(event_id &char, raw_args &char, mut app App) {
 // (E.g., it allows to keep updating the content and animations running in the meantime).
 // Let's refer to this as async example.
 pub fn fetch_news(event_id &char, raw_args &char, app &App) {
-	// With GC enabled:
-	// Deref the event_id to keep it available when executing `webview.result` from the spawned thread.
-	// Otherwise it gets obscured during garbage collection and using it in a `webview.result` won't
-	// return data to the calling JS function.
-	spawn app.fetch_news(*event_id)
+	// Copying the event_id helps to keep it available when executing `webview.result` from the
+	// spawned thread. Otherwise it can get obscured during garbage collection and cause errors.
+	spawn app.fetch_news(copy_char(event_id))
 }

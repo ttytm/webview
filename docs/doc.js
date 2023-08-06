@@ -151,8 +151,11 @@ function setupSearch() {
 function setupSearchKeymaps() {
 	const searchInput = document.querySelector('#search input');
 	const searchKeys = document.querySelector('#search-keys');
+	// TODO:
+	// const modifierKeyPrefix = navigator.platform.indexOf('Mac') === 0 ? '⌘' : 'Ctrl';
+	// shortcutIndicator.innerHTML = '<div><kbd>/</kbd></div>';
 	document.addEventListener('keydown', (ev) => {
-		if (ev.key == '/' || (ev.ctrlKey && ev.key === 'k')) {
+		if (ev.key == '/' || ((e.ctrlKey || e.metaKey) && ev.key === 'k')) {
 			ev.preventDefault();
 			searchInput.focus();
 			// TODO:

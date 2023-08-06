@@ -18,24 +18,27 @@ pub fn connect(event_id &char, args &char, app &App) {
 }
 
 // Returns a value when it's called from JS.
-pub fn toggle(event_id &char, args &char, mut app App) {
+// (We can use `_` to ignore unused parameters)
+fn toggle(event_id &char, _ &char, mut app App) {
 	app.settings.toggle = !app.settings.toggle
 	dump(app.settings.toggle)
-	app.w.result(event_id, json.encode(app.settings.toggle))
+	app.w.result(event_id, .value, json.encode(app.settings.toggle))
 }
 
 // Handles received arguments.
 fn login(event_id &char, raw_args &char, mut app App) {
-	// `raw_args` is a JSON array of all arguments passed to the JS function.
-	mut resp := 'An error occured.'
+	mut status := webview.Status.error
+	mut resp := 'An error occured'
 	defer {
-		app.w.result(event_id, json.encode(resp))
+		app.w.result(event_id, status, json.encode(resp))
 	}
+	// All arguments passed to the JS function (here `raw_args`) are received as a JSON array.
 	// Use the json module to handle decoding into the expected type.
 	args := json.decode([]string, unsafe { raw_args.vstring() }) or { return }
 	name := args[0] or { return }
-	resp = 'Data received: Check your terminal.'
 	println('Hello ${name}!')
+	resp = 'Data received: Check your terminal.'
+	status = .value
 }
 
 // Spawns a thread and returns the functions result from it.

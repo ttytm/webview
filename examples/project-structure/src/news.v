@@ -13,7 +13,7 @@ fn (app &App) fetch_news(event_id &char) {
 	defer {
 		// Artificially delay the result to simulate a function that does some extended processing.
 		time.sleep(time.second * 3)
-		app.w.result(event_id, json.encode(result))
+		app.w.result(event_id, .value, json.encode(result))
 	}
 
 	resp := http.get('https://jsonplaceholder.typicode.com/posts') or {
@@ -24,5 +24,6 @@ fn (app &App) fetch_news(event_id &char) {
 		eprintln('Failed decoding news.')
 		return
 	}
+	// Get a random article from the articles array.
 	result = news[rand.int_in_range(0, news.len - 1) or { return }]
 }

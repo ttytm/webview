@@ -26,6 +26,11 @@ pub enum Hint {
 	max = C.WEBVIEW_HINT_MAX
 }
 
+pub enum Status {
+	value
+	error
+}
+
 [params]
 pub struct CreateOptions {
 	debug  bool
@@ -133,8 +138,8 @@ pub fn (w &Webview) unbind(name string) {
 // be provided to allow the internal RPC engine to match the request and response.
 // If the status is zero - the result is expected to be a valid JSON value.
 // If the status is not zero - the result is an error JSON object.
-pub fn (w &Webview) result(event_id &char, json_result string) {
-	C.webview_return(w, event_id, 0, &char(json_result.str))
+pub fn (w &Webview) result(event_id &char, status Status, json_result string) {
+	C.webview_return(w, event_id, int(status), &char(json_result.str))
 }
 
 // copy_char copies a C style string. The functions main use case is passing an `event_id &char`

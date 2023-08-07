@@ -42,7 +42,7 @@ Install the repository as V module
 >
 > ```sh
 > ~/.vmodules/webview/src/bindings/build.vsh # from source
-> ~/.vmodules/ttym/webview/src/bindings/build.vsh # vpm module
+> ~/.vmodules/ttytm/webview/src/bindings/build.vsh # vpm module
 > ```
 
 > ```v
@@ -100,4 +100,4 @@ Extended examples can be found in the [examples](https://github.com/ttytm/webvie
 An application example that uses this webview binding with SvelteKit for the UI is [emoji-mart-desktop](https://github.com/ttytm/emoji-mart-desktop).
 
 The overview of exported functions is accessible in the repositories [`src/lib.v`](https://github.com/ttytm/webview/blob/master/src/lib.v)
-file and on its [vdoc](https://ttytm.github.io/webview/) site.
+file and on its [vdoc site](https://ttytm.github.io/webview/).

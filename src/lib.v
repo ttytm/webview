@@ -149,7 +149,7 @@ pub fn (w &Webview) result(event_id &char, status Status, json_result string) {
 // Example:
 // ```v
 // fn fetch_data(event_id &char, raw_args &char, app &App) {
-// 	spawn app.fetch_data(webview.c_copy(event_id))
+// 	spawn app.fetch_data(webview.copy_char(event_id))
 // }
 // ```
 pub fn copy_char(s &char) &char {

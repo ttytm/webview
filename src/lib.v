@@ -39,7 +39,7 @@ pub struct CreateOptions {
 
 // Internal helper to silence the parser's warning about an unused binding module
 // despite its C bindings being used.
-const used = bindings.used
+const _ = bindings.used
 
 // create creates a new webview instance. If `debug` is `true` - developer tools
 // will be enabled (if the platform supports them). The `window` parameter can be

@@ -150,23 +150,61 @@ function setupSearch() {
 
 function setupSearchKeymaps() {
 	const searchInput = document.querySelector('#search input');
-	const searchKeys = document.querySelector('#search-keys');
-	// TODO:
-	// const modifierKeyPrefix = navigator.platform.indexOf('Mac') === 0 ? '⌘' : 'Ctrl';
-	// shortcutIndicator.innerHTML = '<div><kbd>/</kbd></div>';
+	// Keyboard shortcut indicator
+	const searchKeys = document.createElement('div');
+	const modifierKeyPrefix = navigator.platform.includes('Mac') ? '⌘' : 'Ctrl';
+	searchKeys.setAttribute('id', 'search-keys');
+	searchKeys.innerHTML = '<kbd>' + modifierKeyPrefix + '</kbd><kbd>k</kbd>';
+	searchInput.parentElement?.appendChild(searchKeys);
+	searchInput.addEventListener('focus', () => searchKeys.classList.add('hide'));
+	searchInput.addEventListener('blur', () => searchKeys.classList.remove('hide'));
+	// Global shortcuts to focus searchInput
 	document.addEventListener('keydown', (ev) => {
 		if (ev.key == '/' || ((ev.ctrlKey || ev.metaKey) && ev.key === 'k')) {
 			ev.preventDefault();
 			searchInput.focus();
-			// TODO:
-			// searchKeys.classList.remove('hidden');
 		}
 	});
+	// Shortcuts while searchInput is focused
+	let selectedIdx = -1;
+	function selectResult(results, newIdx) {
+		if (selectedIdx !== -1) {
+			results[selectedIdx].classList.remove('selected');
+		}
+		results[newIdx].classList.add('selected');
+		results[newIdx].scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+		selectedIdx = newIdx;
+	}
 	searchInput.addEventListener('keydown', (ev) => {
-		if (ev.key == 'Escape') {
+		const searchResults = document.querySelectorAll('.search .result');
+		if (ev.key === 'Escape') {
 			searchInput.blur();
-			console.log(mainContent);
-			mainContent.focus();
+		} else if (ev.key === 'Enter' && selectedIdx != -1) {
+			searchResults[selectedIdx].querySelector('a').click();
+		} else if (searchResults.length > 0) {
+			if (ev.key === 'ArrowDown') {
+				ev.preventDefault();
+				if (selectedIdx >= searchResults.length - 1) {
+					// Cycle to first if last is selected
+					selectResult(searchResults, 0);
+				} else {
+					// Select next
+					selectResult(searchResults, selectedIdx + 1);
+				}
+			} else if (ev.key === 'ArrowUp') {
+				ev.preventDefault();
+				if (selectedIdx <= 0) {
+					// Cycle to last if first is selected (or select it if none is selcted yet)
+					selectResult(searchResults, searchResults.length - 1);
+				} else {
+					// Select previous
+					selectResult(searchResults, selectedIdx - 1);
+				}
+			} else {
+				selectedIdx = -1;
+			}
+		} else {
+			selectedIdx = -1;
 		}
 	});
 }

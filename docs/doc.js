@@ -49,7 +49,6 @@ function setupMobileToggle() {
 		const isHidden = docNav.classList.contains('hidden');
 		docNav.classList.toggle('hidden');
 		const search = docNav.querySelector('.search');
-		// console.log(search);
 		const searchHasResults = search.classList.contains('has-results');
 		if (isHidden && searchHasResults) {
 			search.classList.remove('mobile-hidden');
@@ -172,18 +171,23 @@ function setupSearchKeymaps() {
 			results[selectedIdx].classList.remove('selected');
 		}
 		results[newIdx].classList.add('selected');
-		results[newIdx].scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+		results[newIdx].scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
 		selectedIdx = newIdx;
 	}
 	searchInput.addEventListener('keydown', (ev) => {
 		const searchResults = document.querySelectorAll('.search .result');
-		if (ev.key === 'Escape') {
-			searchInput.blur();
-		} else if (ev.key === 'Enter' && selectedIdx != -1) {
-			searchResults[selectedIdx].querySelector('a').click();
-		} else if (searchResults.length > 0) {
-			if (ev.key === 'ArrowDown') {
+		switch (ev.key) {
+			case 'Escape':
+				searchInput.blur();
+				break;
+			case 'Enter':
+				if (selectedIdx != -1) {
+					searchResults[selectedIdx].querySelector('a').click();
+				}
+				break;
+			case 'ArrowDown':
 				ev.preventDefault();
+				if (!searchResults.length) break;
 				if (selectedIdx >= searchResults.length - 1) {
 					// Cycle to first if last is selected
 					selectResult(searchResults, 0);
@@ -191,8 +195,10 @@ function setupSearchKeymaps() {
 					// Select next
 					selectResult(searchResults, selectedIdx + 1);
 				}
-			} else if (ev.key === 'ArrowUp') {
+				break;
+			case 'ArrowUp':
 				ev.preventDefault();
+				if (!searchResults.length) break;
 				if (selectedIdx <= 0) {
 					// Cycle to last if first is selected (or select it if none is selcted yet)
 					selectResult(searchResults, searchResults.length - 1);
@@ -200,11 +206,9 @@ function setupSearchKeymaps() {
 					// Select previous
 					selectResult(searchResults, selectedIdx - 1);
 				}
-			} else {
+				break;
+			default:
 				selectedIdx = -1;
-			}
-		} else {
-			selectedIdx = -1;
 		}
 	});
 }
@@ -237,30 +241,4 @@ function createSearchResult(data) {
 }
 
 function setupCollapse() {
-	const dropdownArrows = document.querySelectorAll('.dropdown-arrow');
-	dropdownArrows.forEach((arrow) => {
-		arrow.addEventListener('click', (e) => {
-			const parent = e.target.parentElement.parentElement.parentElement;
-			parent.classList.toggle('open');
-		});
-	});
-}
-
-function debounce(func, timeout) {
-	let timer;
-	return (...args) => {
-		const next = () => func(...args);
-		if (timer) {
-			clearTimeout(timer);
-		}
-		timer = setTimeout(next, timeout > 0 ? timeout : 300);
-	};
-}
-
-document.addEventListener('keypress', (ev) => {
-	if (ev.key == '/') {
-		const search = document.getElementById('search');
-		ev.preventDefault();
-		search.focus();
-	}
-});
+	const dropdownArrows = document.querySelectorAll('.dropdo

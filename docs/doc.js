@@ -159,7 +159,7 @@ function setupSearchKeymaps() {
 	searchInput.addEventListener('blur', () => searchKeys.classList.remove('hide'));
 	// Global shortcuts to focus searchInput
 	document.addEventListener('keydown', (ev) => {
-		if (ev.key == '/' || ((ev.ctrlKey || ev.metaKey) && ev.key === 'k')) {
+		if (ev.key === '/' || ((ev.ctrlKey || ev.metaKey) && ev.key === 'k')) {
 			ev.preventDefault();
 			searchInput.focus();
 		}
@@ -181,9 +181,8 @@ function setupSearchKeymaps() {
 				searchInput.blur();
 				break;
 			case 'Enter':
-				if (selectedIdx != -1) {
-					searchResults[selectedIdx].querySelector('a').click();
-				}
+				if (!searchResults.length || selectedIdx === -1) break;
+				searchResults[selectedIdx].querySelector('a').click();
 				break;
 			case 'ArrowDown':
 				ev.preventDefault();
@@ -241,4 +240,22 @@ function createSearchResult(data) {
 }
 
 function setupCollapse() {
-	const dropdownArrows = document.querySelectorAll('.dropdo
+	const dropdownArrows = document.querySelectorAll('.dropdown-arrow');
+	dropdownArrows.forEach((arrow) => {
+		arrow.addEventListener('click', (e) => {
+			const parent = e.target.parentElement.parentElement.parentElement;
+			parent.classList.toggle('open');
+		});
+	});
+}
+
+function debounce(func, timeout) {
+	let timer;
+	return (...args) => {
+		const next = () => func(...args);
+		if (timer) {
+			clearTimeout(timer);
+		}
+		timer = setTimeout(next, timeout > 0 ? timeout : 300);
+	};
+}

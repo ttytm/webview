@@ -15,9 +15,14 @@ fn main() {
 	http.download_file('${lib_url}/webview.h', '${lib_dir}/webview.h') or { panic(err) }
 	http.download_file('${lib_url}/webview.cc', '${lib_dir}/webview.cc') or { panic(err) }
 
-	mut cmd := 'g++ -c ${lib_dir}/webview.cc -std=c++17 -o ${lib_dir}/webview.o'
+	mut cmd := 'g++ -c ${lib_dir}/webview.cc -o ${lib_dir}/webview.o'
 	$if linux {
 		cmd += ' $(pkg-config --cflags gtk+-3.0 webkit2gtk-4.0)'
+	}
+	$if darwin && amd64 {
+		cmd += ' -std=c++11'
+	} $else {
+		cmd += ' -std=c++17'
 	}
 	comp_res := execute(cmd)
 	if comp_res.exit_code != 0 {

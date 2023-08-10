@@ -16,20 +16,16 @@ jobs:
     steps:
       - name: Setup V
         uses: vlang/setup-v@v1.3
-
       - name: Setup Dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
           packages: libgtk-3-dev libwebkit2gtk-4.0-dev
           version: 1.0
-
       - name: Checkout ${{ env.REPO_NAME }}
         uses: actions/checkout@v3
         with:
           path: ${{ env.REPO_NAME }}
-
       - name: Copy ${{ env.REPO_NAME }} to .vmodules
         run: cp -r ${{ env.REPO_NAME }} ${{ env.MOD_PATH }}
-
       - name: Check Markdown
         run: v check-md -hide-warnings ${{ env.REPO_NAME }}

@@ -15,23 +15,31 @@ Prerequisites
 
   [Installing V from source](https://github.com/vlang/v#installing-v-from-source)
 
-- Webkit
+- WebKit
 
-  ```
+  E.g., on a debian based Linux destribution
+
+  ```sh
   sudo apt install libgtk-3-dev libwebkit2gtk-4.0-dev
+  ```
+
+  On macOS you should be good to go with developer tools installed
+
+  ```sh
+  xcode-select --install
   ```
 
 Install the repository as V module
 
 - From source
 
-  ```
+  ```sh
   v install --git https://github.com/ttytm/webview
   ```
 
 - Or as vpm module
 
-  ```
+  ```sh
   v install ttytm.webview
   ```
 

@@ -1,10 +1,7 @@
 name: CI macOS
 
 on:
-  push:
-    paths-ignore: ['**/*.md']
-  pull_request:
-    paths-ignore: ['**/*.md']
+  workflow_call:
 
 env:
   REPO_NAME: ${{ github.event.repository.name }}

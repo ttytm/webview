@@ -28,20 +28,24 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Install V
         uses: vlang/setup-v@v1.3
         with:
           check-latest: true
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: webview
       - name: Build docs
-        run: ./build_docs.vsh
+        run: |
+          cd webview
+          ./build_docs.vsh
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: '_docs'
+          path: 'webview/_docs'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2

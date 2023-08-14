@@ -2,6 +2,13 @@
 
 import regex
 
+fn rm_readme_section(html string) string {
+	mut r := regex.regex_opt(r'<h1>webview - V Binding</h1>.*</section>') or { panic(err) }
+	sec_start, sec_end := r.find(html)
+	return '${html[..sec_start]}</section>${html[sec_end..]}'
+		.replace('<li class="open"><a href="#readme_webview">README</a></li>', '')
+}
+
 fn move_copy_char_section(html string) string {
 	// Find initial copy_char section
 	mut r := regex.regex_opt(r'<section id="copy_char" class="doc-node">.*</section>\s</section>') or {
@@ -36,6 +43,7 @@ fn build_docs() ! {
 		exit(1)
 	}
 	mut webview_html := read_file('_docs/webview.html')!
+	webview_html = rm_readme_section(webview_html)
 	webview_html = move_copy_char_section(webview_html)
 	webview_html = move_copy_char_menu_item(webview_html)
 	write_file('_docs/webview.html', webview_html)!

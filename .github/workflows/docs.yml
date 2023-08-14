@@ -32,12 +32,16 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup Pages
         uses: actions/configure-pages@v3
+      - name: Install V
+        uses: vlang/setup-v@v1.3
+        with:
+          check-latest: true
       - name: Build docs
-        run: ./build_docs.vsh
+        run: docs/build.vsh
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: 'docs/_docs'
+          path: '_docs'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2

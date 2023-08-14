@@ -29,35 +29,29 @@ fn move_copy_char_menu_item(html string) string {
 	return '${result[..target_start]}${menu_item}\n\t${result[target_start..]}'
 }
 
-fn clean_all() ! {
-	rmdir_all('docs/_docs')!
-	clean()!
-}
-
-fn clean() ! {
-	rmdir_all('docs/webview')!
-	rm('docs/README.md')!
-	rm('docs/build')!
+fn prep() ! {
+	rmdir_all('docs/webview/') or {}
+	mkdir_all('docs/webview/webview/')!
+	cp('src/lib.v', 'docs/webview/webview/lib.v')!
+	cp('README.md', 'docs/webview/README.md')!
 }
 
 fn build_docs() ! {
-	mkdir('docs/webview')!
-	cp('src/lib.v', 'docs/webview/lib.v')!
-	cp('README.md', 'docs/README.md')!
-	res := execute('cd docs && v doc -readme -m -f html .')
+	res := execute('cd docs/webview && v doc -readme -m -f html .')
 	if res.exit_code != 0 {
 		eprintln(res.output)
 		exit(1)
 	}
-	mut webview_html := read_file('docs/_docs/webview.html')!
+	mut webview_html := read_file('docs/webview/_docs/webview.html')!
 	webview_html = move_copy_char_section(webview_html)
 	webview_html = move_copy_char_menu_item(webview_html)
-	write_file('docs/_docs/webview.html', webview_html)!
+	write_file('docs/webview/_docs/webview.html', webview_html)!
+	mv('docs/webview/_docs/', './_docs')!
 }
 
-clean_all()!
+prep()!
 build_docs() or {
 	eprintln('Failed building docs. ${err}')
 	exit(1)
 }
-clean()!
+rmdir_all('docs/webview/')!

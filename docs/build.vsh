@@ -4,7 +4,7 @@ import regex
 
 fn move_copy_char_section(html string) string {
 	// Find initial copy_char section
-	mut r := regex.regex_opt(r'<section id="copy_char" class="doc-node">.*</section>') or {
+	mut r := regex.regex_opt(r'<section id="copy_char" class="doc-node">.*</section>\s</section>') or {
 		panic(err)
 	}
 	sec_start, sec_end := r.find(html)
@@ -29,8 +29,13 @@ fn move_copy_char_menu_item(html string) string {
 	return '${result[..target_start]}${menu_item}\n\t${result[target_start..]}'
 }
 
+fn clean() ! {
+	rmdir_all('docs/webview/webview')!
+	rm('docs/webview/README.md')!
+}
+
 fn prep() ! {
-	rmdir_all('docs/webview/') or {}
+	clean() or {}
 	mkdir_all('docs/webview/webview/')!
 	cp('src/lib.v', 'docs/webview/webview/lib.v')!
 	cp('README.md', 'docs/webview/README.md')!
@@ -46,7 +51,6 @@ fn build_docs() ! {
 	webview_html = move_copy_char_section(webview_html)
 	webview_html = move_copy_char_menu_item(webview_html)
 	write_file('docs/webview/_docs/webview.html', webview_html)!
-	mv('docs/webview/_docs/', './_docs')!
 }
 
 prep()!
@@ -54,4 +58,4 @@ build_docs() or {
 	eprintln('Failed building docs. ${err}')
 	exit(1)
 }
-rmdir_all('docs/webview/')!
+clean()!

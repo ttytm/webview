@@ -1,6 +1,6 @@
 # Binaries for programs and plugins
 main
-vvebview
+build
 *.exe
 *.exe~
 *.so
@@ -23,13 +23,14 @@ bin/
 *.db
 
 # Webview library files
-build
 webview.cc
 webview.h
 webview.o*
 
 # Generated docs
 _docs/
+docs/*
+!docs/build.vsh
 
 # Example binaries
 emoji-picker

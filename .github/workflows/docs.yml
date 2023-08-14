@@ -37,11 +37,11 @@ jobs:
         with:
           check-latest: true
       - name: Build docs
-        run: docs/build.vsh
+        run: ./build_docs.vsh
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: 'docs/webview/_docs'
+          path: '_docs'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2

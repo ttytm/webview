@@ -29,33 +29,19 @@ fn move_copy_char_menu_item(html string) string {
 	return '${result[..target_start]}${menu_item}\n\t${result[target_start..]}'
 }
 
-fn clean() ! {
-	rmdir_all('docs/webview/webview')!
-	rm('docs/webview/README.md')!
-}
-
-fn prep() ! {
-	clean() or {}
-	mkdir_all('docs/webview/webview/')!
-	cp('src/lib.v', 'docs/webview/webview/lib.v')!
-	cp('README.md', 'docs/webview/README.md')!
-}
-
 fn build_docs() ! {
-	res := execute('cd docs/webview && v doc -readme -m -f html .')
+	res := execute('v doc -readme -m -f html .')
 	if res.exit_code != 0 {
 		eprintln(res.output)
 		exit(1)
 	}
-	mut webview_html := read_file('docs/webview/_docs/webview.html')!
+	mut webview_html := read_file('_docs/webview.html')!
 	webview_html = move_copy_char_section(webview_html)
 	webview_html = move_copy_char_menu_item(webview_html)
-	write_file('docs/webview/_docs/webview.html', webview_html)!
+	write_file('_docs/webview.html', webview_html)!
 }
 
-prep()!
 build_docs() or {
 	eprintln('Failed building docs. ${err}')
 	exit(1)
 }
-clean()!

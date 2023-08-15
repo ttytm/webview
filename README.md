@@ -45,30 +45,31 @@ Install the repository as V module
 
 ## Usage
 
-> **Note**
-> Depending on the installation method, default paths and imports look like:
->
-> ```sh
-> ~/.vmodules/webview/src/bindings/build.vsh # from source
-> ~/.vmodules/ttytm/webview/src/bindings/build.vsh # vpm module
-> ```
-
-> ```v
-> import webview // from source
-> import ttytm.webview // vpm module
-> ```
-
-Before the first use, we need to build the webview C library to which we are going to bind.
+Before the first use, build the webview C library to which the webview V module will bind.
 
 ```sh
-# Run the included build script
+# For installations from source
 ~/.vmodules/webview/src/bindings/build.vsh
+# For installations as vpm module
+~/.vmodules/ttytm/webview/src/bindings/build.vsh
+# PowerShell `v run` might require to be prefixed with `v run`, e.g.:
+v run $HOME/.vmodules/webview/bindings/build.vsh
 ```
 
 ### Usage Example
 
+> **Note**
+> When running and building on Windows, it is recommended to use `gcc` for compilation. E.g.:
+>
+> ```sh
+> v -cc gcc run .
+> ```
+
+<br>
+
 ```v ignore
-import webview
+import webview // For installations from source
+// import ttytm.webview // For installations as vpm module
 
 struct App {
 	w &webview.Webview
@@ -108,4 +109,4 @@ Extended examples can be found in the [examples](https://github.com/ttytm/webvie
 An application example that uses this webview binding with SvelteKit for the UI is [emoji-mart-desktop](https://github.com/ttytm/emoji-mart-desktop).
 
 The overview of exported functions is accessible in the repositories [`src/lib.v`](https://github.com/ttytm/webview/blob/master/src/lib.v)
-file and on its [vdoc site](https://ttytm.github.io/webview/).
+file and on its [vdoc site](https://ttytm.github.io/webview/webview.html).

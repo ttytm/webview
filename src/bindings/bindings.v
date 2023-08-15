@@ -2,6 +2,7 @@ module bindings
 
 #flag linux -DWEBVIEW_GTK -lstdc++
 #flag darwin -DWEBVIEW_COCOA -framework WebKit -stdlib=libc++ -lstdc++
+#flag windows -DWEBVIEW_EDGE -static -ladvapi32 -lole32 -lshell32 -lshlwapi -luser32 -lversion -lstdc++
 
 #flag @VMODROOT/src/bindings/webview.o
 #include "@VMODROOT/src/bindings/webview.h"

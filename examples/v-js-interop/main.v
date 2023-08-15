@@ -83,6 +83,7 @@ fn main() {
 		w: webview.create(debug: true)
 		settings: struct {true}
 	}
+	app.w.set_title('V webview examples')
 	app.w.set_size(800, 600, .@none)
 	// The first string arg names the functions for JS usage. E.g. use JS's `camelCase` convention if you prefer it.
 	app.w.bind('connect', connect, &app)

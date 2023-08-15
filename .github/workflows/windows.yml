@@ -1,7 +1,11 @@
-name: CI macOS
+name: CI Windows
 
 on:
   workflow_call:
+
+defaults:
+  run:
+    shell: bash
 
 env:
   REPO_NAME: ${{ github.event.repository.name }}
@@ -10,7 +14,7 @@ env:
 
 jobs:
   setup:
-    runs-on: macos-latest
+    runs-on: windows-latest
     steps:
       - name: Install V
         uses: vlang/setup-v@v1.3
@@ -34,10 +38,10 @@ jobs:
 
   build:
     needs: setup
-    runs-on: macos-latest
+    runs-on: windows-latest
     strategy:
       matrix:
-        compiler: [gcc, clang]
+        compiler: [gcc]
     steps:
       - name: Restore Cache
         uses: actions/cache/restore@v3

@@ -12,5 +12,8 @@ jobs:
     permissions:
       contents: write
 
-  macOS:
+  macos:
     uses: ./.github/workflows/macos.yml
+
+  windows:
+    uses: ./.github/workflows/windows.yml

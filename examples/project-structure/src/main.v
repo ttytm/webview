@@ -15,6 +15,7 @@ fn main() {
 		settings: struct {true}
 	}
 	app.bind()
+	app.w.set_title('V webview examples')
 	app.w.set_size(800, 600, .@none)
 	app.w.navigate('file://${@VMODROOT}/ui/index.html')
 	app.w.run()

@@ -52,7 +52,7 @@ Before the first use, build the webview C library to which the webview V module 
 ~/.vmodules/webview/src/bindings/build.vsh
 # For installations as vpm module
 ~/.vmodules/ttytm/webview/src/bindings/build.vsh
-# PowerShell `v run` might require to be prefixed with `v run`, e.g.:
+# PowerShell might require to prefix the script with `v run`, e.g.:
 v run $HOME/.vmodules/webview/bindings/build.vsh
 ```
 

@@ -50,9 +50,7 @@ fn download(silent bool) {
 	}
 	http.download_file('${lib_url}/webview.h', '${lib_dir}/webview.h') or { panic(err) }
 	http.download_file('${lib_url}/webview.cc', '${lib_dir}/webview.cc') or { panic(err) }
-	$if windows {
-		download_webview2()
-	}
+	download_webview2()
 	dl_spinner <- true
 }
 

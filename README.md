@@ -45,7 +45,8 @@ Install the repository as V module
 
 ## Usage
 
-Before the first use, build the webview C library to which the webview V module will bind.
+After the installation, build the webview C library to which the webview V module will bind.\
+You can re-run the script at any point to rebuild the library with the latest upstream changes.
 
 ```sh
 # For installations from source

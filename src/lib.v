@@ -11,8 +11,6 @@ Source webview C library: https://github.com/webview/webview
 
 module webview
 
-import bindings
-
 pub type Webview = C.webview_t
 
 pub enum Hint {
@@ -36,10 +34,6 @@ pub struct CreateOptions {
 	debug  bool
 	window voidptr
 }
-
-// Internal helper to silence the parser's warning about an unused binding module
-// despite its C bindings being used.
-const _ = bindings.used
 
 // create creates a new webview instance. If `debug` is `true` - developer tools
 // will be enabled (if the platform supports them). The `window` parameter can be

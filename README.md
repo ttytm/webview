@@ -49,11 +49,11 @@ Before the first use, build the webview C library to which the webview V module 
 
 ```sh
 # For installations from source
-~/.vmodules/webview/src/bindings/build.vsh
+~/.vmodules/webview/src/build.vsh
 # For installations as vpm module
-~/.vmodules/ttytm/webview/src/bindings/build.vsh
+~/.vmodules/ttytm/webview/src/build.vsh
 # PowerShell might require to prefix the script with `v run`, e.g.:
-v run $HOME/.vmodules/webview/bindings/build.vsh
+v run $HOME/.vmodules/webview/build.vsh
 ```
 
 ### Usage Example

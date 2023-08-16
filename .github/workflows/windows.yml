@@ -26,7 +26,7 @@ jobs:
           path: ${{ env.REPO_NAME }}
       - name: Setup ${{ env.REPO_NAME }}
         run: |
-          ${{ env.REPO_NAME }}/src/bindings/build.vsh --silent
+          ${{ env.REPO_NAME }}/src/build.vsh --silent
           cp -r ${{ env.REPO_NAME }} ${{ env.MOD_PATH }}
       - name: Cache
         uses: actions/cache/save@v3

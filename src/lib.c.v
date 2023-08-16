@@ -1,22 +1,18 @@
-module bindings
+module webview
 
 #flag linux -DWEBVIEW_GTK -lstdc++
 #flag darwin -DWEBVIEW_COCOA -framework WebKit -stdlib=libc++ -lstdc++
 #flag windows -DWEBVIEW_EDGE -static -ladvapi32 -lole32 -lshell32 -lshlwapi -luser32 -lversion -lstdc++
 
-#flag @VMODROOT/src/bindings/webview.o
-#include "@VMODROOT/src/bindings/webview.h"
+#flag @VMODROOT/src/webview.o
+#include "@VMODROOT/src/webview.h"
 
 $if linux {
 	#pkgconfig gtk+-3.0
 	#pkgconfig webkit2gtk-4.0
 }
 
-// Internal helper to silence the parser's warning about an unused binding module
-// despite its C bindings being used.
-pub const used = true
-
-pub struct C.webview_t {}
+struct C.webview_t {}
 
 fn C.webview_create(debug int, window voidptr) &C.webview_t
 

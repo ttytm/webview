@@ -7,7 +7,7 @@ import net.http
 
 const (
 	lib_url = 'https://raw.githubusercontent.com/webview/webview/master'
-	lib_dir = '${@VMODROOT}/src/bindings'
+	lib_dir = '${@VMODROOT}/src'
 )
 
 fn spinner(ch chan bool) {

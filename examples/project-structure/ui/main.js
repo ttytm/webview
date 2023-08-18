@@ -36,7 +36,7 @@ document.getElementById('login').addEventListener('submit', async (e) => {
 		submitInfo.innerHTML = 'Please enter a value';
 		return;
 	}
-	// Call V funciton
+	// Call V function
 	const resp = await window.login(user);
 	submitInfo.innerHTML = resp;
 });
@@ -50,7 +50,7 @@ async function fetchArticle() {
 	content.innerHTML = `<span class="dot one">.</span>
 					<span class="dot two">.</span>
 					<span class="dot three">.</span>`;
-	// Call V funciton
+	// Call V function
 	const news = await window.fetch_news();
 	heading.innerHTML = news.title;
 	content.innerHTML = news.body;

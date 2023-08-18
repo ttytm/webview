@@ -35,7 +35,7 @@ fn toggle(event_id &char, _ &char, mut app App) {
 // Handles received arguments.
 fn login(event_id &char, raw_args &char, mut app App) {
 	mut status := webview.Status.error
-	mut resp := 'An error occured'
+	mut resp := 'An error occurred'
 	defer {
 		app.w.result(event_id, status, json.encode(resp))
 	}

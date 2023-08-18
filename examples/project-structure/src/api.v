@@ -19,16 +19,16 @@ pub fn connect(event_id &char, args &char, app &App) {
 
 // Returns a value when it's called from JS.
 // (We can use `_` to ignore unused parameters)
-fn toggle(event_id &char, _ &char, mut app App) {
+pub fn toggle(event_id &char, _ &char, mut app App) {
 	app.settings.toggle = !app.settings.toggle
 	dump(app.settings.toggle)
 	app.w.result(event_id, .value, json.encode(app.settings.toggle))
 }
 
 // Handles received arguments.
-fn login(event_id &char, raw_args &char, mut app App) {
+pub fn login(event_id &char, raw_args &char, mut app App) {
 	mut status := webview.Status.error
-	mut resp := 'An error occured'
+	mut resp := 'An error occurred'
 	defer {
 		app.w.result(event_id, status, json.encode(resp))
 	}

@@ -20,7 +20,8 @@ v -cc clang -prod examples/emoji-picker/main.v -o examples/emoji-picker/emoji-pi
 ```
 
 <div align="center">
-
-![Screenshot](https://github.com/ttytm/webview/assets/34311583/1eab4ed6-5a89-4d81-abfb-765db6b48cdc)
-
+  <img width="412" src="https://github.com/ttytm/webview/assets/34311583/b4e4f473-c40e-4df0-9819-2a6cb04ddfa8">
 </div>
+
+An extended example of using a front-end framework instead of importing it from a CDN script is:
+[ttytm/emoji-mart-desktop](https://github.com/ttytm/emoji-mart-desktop)

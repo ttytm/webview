@@ -50,9 +50,9 @@ You can re-run the script at any point to rebuild the library with the latest up
 
 ```sh
 # For installations from source
-~/.vmodules/webview/src/build.vsh
+~/.vmodules/webview/build.vsh
 # For installations as vpm module
-~/.vmodules/ttytm/webview/src/build.vsh
+~/.vmodules/ttytm/webview/build.vsh
 # PowerShell might require to prefix the script with `v run`, e.g.:
 v run $HOME/.vmodules/webview/build.vsh
 ```
@@ -111,3 +111,8 @@ An application example that uses this webview binding with SvelteKit for the UI 
 
 The overview of exported functions is accessible in the repositories [`src/lib.v`](https://github.com/ttytm/webview/blob/master/src/lib.v)
 file and on its [vdoc site](https://ttytm.github.io/webview/webview.html).
+
+## Disclaimer
+
+Until a stable version 1.0 is available, breaking changes may be made for a next minor(0.<minor>.\*)
+version. Pin on a version to avoid such potential changes.

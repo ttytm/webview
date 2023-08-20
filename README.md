@@ -114,5 +114,5 @@ file and on its [vdoc site](https://ttytm.github.io/webview/webview.html).
 
 ## Disclaimer
 
-Until a stable version 1.0 is available, breaking changes may be made for a next minor(0.<minor>.\*)
+Until a stable version 1.0 is available, breaking changes occur for a next minor(`0.<minor>.*`)
 version. Pin on a version to avoid such potential changes.

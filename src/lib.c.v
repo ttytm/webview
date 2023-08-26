@@ -38,8 +38,8 @@ fn C.webview_init(w &C.webview_t, code &char)
 
 fn C.webview_eval(w &C.webview_t, code &char)
 
-fn C.webview_bind(w &C.webview_t, func_name &char, func fn (&char, &char, voidptr), arg voidptr)
+fn C.webview_bind(w &C.webview_t, func_name &char, func fn (EventId, JSArgs, voidptr), arg voidptr)
 
 fn C.webview_unbind(w &C.webview_t, func_name &char)
 
-fn C.webview_return(w &C.webview_t, seq &char, status int, result &char)
+fn C.webview_return(w &C.webview_t, event_id EventId, status int, result &char)

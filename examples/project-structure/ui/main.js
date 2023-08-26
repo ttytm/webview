@@ -1,31 +1,18 @@
 let initialized = false;
+let settings = { toggle: false };
 const toggleState = document.querySelector('#toggle-state');
 const submitInfo = document.querySelector('#submit-info');
 const heading = document.querySelector('h3');
 const content = document.querySelector('p');
 
-/**
- * A JS function that will be called by our V program.
- * @param {Object} settings
- * @param {boolean} settings.toggle
- */
-function init(settings) {
-	initialized = true;
-	toggleState.innerHTML = settings.toggle ? 'on' : 'off';
-	console.log('Initiated JS!');
-}
-
-// V function calls
+// V functions (in the scope of this example, prefixed with `window.`)
 //
-// We don't need to use the `window.` prefix. But it is a common pattern in webview examples.
-// Here it is done for semantic reasons. It can help to make the origin more immediately visible
-// when things get more crowded. Alternatively, just keeping the `snake_case` function names
-// or adding a prefix `v_init_js`, might be sufficient to differentiate functions.
-// Just use the style you prefer.
-
-window.connect();
+// The `window.` prefix is not required. But it is a common pattern in webview examples.
+// For semantic reasons and to help distinguish functions as your project grows, this can be a helpful pattern.
+// Just use the style and convention you prefer when naming the webview JS functions.
 
 async function handleToggle() {
+	// V function call
 	toggleState.innerHTML = (await window.toggle_setting()) ? 'on' : 'off';
 }
 
@@ -36,7 +23,7 @@ document.getElementById('login').addEventListener('submit', async (e) => {
 		submitInfo.innerHTML = 'Please enter a value';
 		return;
 	}
-	// Call V function
+	// V function call
 	const resp = await window.login(user);
 	submitInfo.innerHTML = resp;
 });
@@ -50,8 +37,15 @@ async function fetchArticle() {
 	content.innerHTML = `<span class="dot one">.</span>
 					<span class="dot two">.</span>
 					<span class="dot three">.</span>`;
-	// Call V function
+	// V function call
 	const news = await window.fetch_news();
 	heading.innerHTML = news.title;
 	content.innerHTML = news.body;
 }
+
+(async () => {
+	// V function call
+	settings = await window.get_settings();
+	toggleState.innerHTML = settings.toggle ? 'on' : 'off';
+	initialized = true;
+})();

@@ -1,6 +1,6 @@
 # Webview Project Structure
 
-This example integrates the [`v-js-interop`](https://github.com/ttytm/webview/tree/master/examples/v-js-interop) example
+This example integrates the [`v-js-interop-app`](https://github.com/ttytm/webview/tree/master/examples/v-js-interop-app) example
 into a project structure that can be used as a starting guide for more complex Webview projects.
 
 ```

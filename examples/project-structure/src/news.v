@@ -1,6 +1,7 @@
 import time
 import json
 import rand
+import webview
 import net.http
 
 struct News {
@@ -8,12 +9,12 @@ struct News {
 	body  string
 }
 
-fn (app &App) fetch_news(event_id &char) {
+fn (app &App) fetch_news(event_id webview.EventId) {
 	mut result := News{}
 	defer {
 		// Artificially delay the result to simulate a function that does some extended processing.
 		time.sleep(time.second * 3)
-		app.w.result(event_id, .value, json.encode(result))
+		app.w.@return(event_id, .value, result)
 	}
 
 	resp := http.get('https://jsonplaceholder.typicode.com/posts') or {

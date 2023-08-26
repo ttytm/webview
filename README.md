@@ -93,7 +93,7 @@ const html = '<!DOCTYPE html>
 	</body>
 </html>'
 
-fn my_v_func(event_id &char, args &char, app &App) {
+fn my_v_func(event_id EventId, args JSArgs, app &App) {
 	println('Hello From V!')
 }
 
@@ -114,5 +114,5 @@ file and on its [vdoc site](https://ttytm.github.io/webview/webview.html).
 
 ## Disclaimer
 
-No more breaking changes are planned, but until a stable version 1.0 is available, breaking changes
-might occur for a minor(`0.<minor>.*`) version. Pin on a version to avoid such potential changes.
+Until a stable version 1.0 is available, new features will be introduced, existing ones may change,
+or breaking changes may occur in minor(`0.<minor>.*`) versions.

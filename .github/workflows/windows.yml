@@ -55,6 +55,7 @@ jobs:
         uses: vlang/setup-v@v1.3
       - name: Build
         run: |
-          v -cg -cc ${{ matrix.compiler }} ${{ env.MOD_PATH }}/examples/emoji-picker/main.v
-          v -cg -cc ${{ matrix.compiler }} ${{ env.MOD_PATH }}/examples/v-js-interop/
+          v -cg -cc ${{ matrix.compiler }} ${{ env.MOD_PATH }}/examples/v-js-interop-simple/
+          v -cg -cc ${{ matrix.compiler }} ${{ env.MOD_PATH }}/examples/v-js-interop-app/
           v -cg -cc ${{ matrix.compiler }} ${{ env.MOD_PATH }}/examples/project-structure/
+          v -cg -cc ${{ matrix.compiler }} ${{ env.MOD_PATH }}/examples/emoji-picker/main.v

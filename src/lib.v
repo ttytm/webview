@@ -156,9 +156,7 @@ pub fn (e EventId) copy() EventId {
 }
 
 fn (args JSArgs) json[T]() ![]T {
-	return json.decode([]T, unsafe { (&char(args)).vstring() }) or {
-		return error('Failed decoding arguments. ${err}')
-	}
+	return json.decode([]T, unsafe { (&char(args)).vstring() })!
 }
 
 // string decodes and returns the argument with the given index as string.

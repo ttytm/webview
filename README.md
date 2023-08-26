@@ -69,7 +69,7 @@ v run $HOME/.vmodules/webview/build.vsh
 <br>
 
 ```v ignore
-import webview // For installations from source
+import webview { EventId, JSArgs } // For installations from source
 // import ttytm.webview // For installations as vpm module
 
 struct App {

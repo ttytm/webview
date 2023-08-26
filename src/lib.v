@@ -1,8 +1,8 @@
 /*
 webview
 
-This wrapper library provides a low-level API that stays true to the original webview API.
-Doc comments for exported functions are adapted from webview/webview.h.
+This library provides a V binding for webview - a tiny library to build modern cross-platform GUI applications.
+Doc comments for exported functions are adapted from the original headerfile webview.h.
 
 License: MIT
 Source: https://github.com/ttytm/webview
@@ -11,7 +11,13 @@ Source webview C library: https://github.com/webview/webview
 
 module webview
 
+import json
+
 pub type Webview = C.webview_t
+
+pub type JSArgs = &char
+
+pub type EventId = &char
 
 pub enum Hint {
 	// Width and height are default size
@@ -119,8 +125,8 @@ pub fn (w &Webview) eval(code string) {
 // receives a sequential request id, a request string and a user-provided
 // argument pointer. The request string is a JSON array of all the arguments
 // passed to the JavaScript function.
-pub fn (w &Webview) bind(name string, func fn (event_id &char, args &char, arg voidptr), arg voidptr) {
-	C.webview_bind(w, &char(name.str), func, arg)
+pub fn (w &Webview) bind(name string, func fn (event_id EventId, args JSArgs, data voidptr), data voidptr) {
+	C.webview_bind(w, &char(name.str), func, data)
 }
 
 // unbind removes a native C callback that was previously set by webview_bind.
@@ -128,24 +134,66 @@ pub fn (w &Webview) unbind(name string) {
 	C.webview_unbind(w, &char(name.str))
 }
 
-// result allows to return a value from the native binding. A request id pointer must
+// @return allows to return a value from the native binding. A request id pointer must
 // be provided to allow the internal RPC engine to match the request and response.
 // If the status is zero - the result is expected to be a valid JSON value.
 // If the status is not zero - the result is an error JSON object.
-pub fn (w &Webview) result(event_id &char, status Status, json_result string) {
-	C.webview_return(w, event_id, int(status), &char(json_result.str))
+pub fn (w &Webview) @return[T](event_id EventId, status Status, result T) {
+	C.webview_return(w, event_id, int(status), &char(json.encode(result).str))
 }
 
-// copy_char copies a C style string. The functions main use case is passing an `event_id &char`
-// to another thread. It helps to keep the `event_id` available when executing `webview.result`
-// from the spawned thread. Without cloning the `event_id` might get obscured during garbage
-// collection and using it in a `webview.result` wouldn't return data to the calling JS function.
+// copy should be used if you want to return a JS result form another thread.
+// Without copying the event id can get corrupted during garbage collection and using
+// it in a `webview.result` wouldn't return data to the calling JS function.
 // Example:
 // ```v
-// fn fetch_data(event_id &char, raw_args &char, app &App) {
-// 	spawn app.fetch_data(webview.copy_char(event_id))
+// fn fetch_data(event_id EventId, args JSArgs, app &App) {
+// 	spawn app.fetch_data(event_id.copy())
 // }
 // ```
-pub fn copy_char(s &char) &char {
-	return unsafe { &char(cstring_to_vstring(s).str) }
+pub fn (e EventId) copy() EventId {
+	return EventId(unsafe { &char(cstring_to_vstring(&char(e)).str) })
+}
+
+fn (args JSArgs) json[T]() ![]T {
+	return json.decode([]T, unsafe { (&char(args)).vstring() }) or {
+		return error('Failed decoding arguments. ${err}')
+	}
+}
+
+// string decodes and returns the argument with the given index as string.
+pub fn (args JSArgs) string(idx usize) string {
+	return args.json[string]() or { return '' }[int(idx)] or { '' }
+}
+
+// int decodes and returns the argument with the given index as integer.
+pub fn (args JSArgs) int(idx usize) int {
+	return args.json[int]() or { return 0 }[int(idx)] or { return 0 }
+}
+
+// bool decodes and returns the argument with the given index as boolean.
+pub fn (args JSArgs) bool(idx usize) bool {
+	return args.json[bool]() or { return false }[int(idx)] or { return false }
+}
+
+// string_opt decodes and returns the argument with the given index as string option.
+pub fn (args JSArgs) string_opt(idx usize) ?string {
+	return args.json[string]() or { return none }[int(idx)] or { return none }
+}
+
+// int_opt decodes and returns the argument with the given index as integer option.
+pub fn (args JSArgs) int_opt(idx usize) ?int {
+	return args.json[int]() or { return none }[int(idx)] or { return none }
+}
+
+// bool_opt decodes and return the argument with the given index as boolean option.
+pub fn (args JSArgs) bool_opt(idx int) ?bool {
+	return args.json[bool]() or { return none }[int(idx)] or { return none }
+}
+
+// decode decodes and returns `JSArgs` into a V data type.
+pub fn (args JSArgs) decode[T]() T {
+	return json.decode(T, unsafe { (&char(args)).vstring() }) or {
+		return error('Failed decoding arguments. ${err}')
+	}
 }

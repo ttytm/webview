@@ -1,5 +1,5 @@
 Module {
-	name: 'emoji-picker'
+	name: 'v-js-interop-app'
 	description: 'A V webview example'
 	license: 'MIT'
 	dependencies: []

@@ -1,4 +1,4 @@
-import webview
+import webview { EventId, JSArgs }
 import os
 
 struct App {
@@ -7,7 +7,7 @@ struct App {
 
 const sound_file_path = '${@VMODROOT}/assets/pop.wav'
 
-fn play_sound(event_id &char, raw_args &char, app &App) {
+fn play_sound(event_id EventId, args JSArgs, app &App) {
 	$if linux {
 		spawn os.execute('aplay ${sound_file_path}')
 	} $else $if macos {

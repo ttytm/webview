@@ -41,6 +41,28 @@ jobs:
     needs: setup
     uses: ./.github/workflows/lint.yml
 
+  test:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore Cache
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            vlang
+            ~/.vmodules
+          key: ${{ runner.os }}-${{ github.sha }}
+          fail-on-cache-miss: true
+      - name: Setup V
+        uses: vlang/setup-v@v1.3
+      - name: Setup Dependencies
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libgtk-3-dev libwebkit2gtk-4.0-dev
+          version: 1.0
+      - name: Test
+        run: xvfb-run v test ${{ env.MOD_PATH }}/tests/
+
   build:
     needs: setup
     runs-on: ubuntu-latest

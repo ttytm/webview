@@ -22,7 +22,7 @@ fn C.webview_run(w &C.webview_t)
 
 fn C.webview_terminate(w &C.webview_t)
 
-fn C.webview_dispatch(w &C.webview_t, func fn (&C.webview_t, voidptr), arg voidptr)
+fn C.webview_dispatch(w &C.webview_t, func fn (w &C.webview_t, ctx voidptr), ctx voidptr)
 
 fn C.webview_get_window(w &C.webview_t) voidptr
 
@@ -38,8 +38,8 @@ fn C.webview_init(w &C.webview_t, code &char)
 
 fn C.webview_eval(w &C.webview_t, code &char)
 
-fn C.webview_bind(w &C.webview_t, func_name &char, func fn (EventId, JSArgs, voidptr), arg voidptr)
+fn C.webview_bind(w &C.webview_t, func_name &char, func fn (event_id &char, args &char, ctx voidptr), ctx voidptr)
 
 fn C.webview_unbind(w &C.webview_t, func_name &char)
 
-fn C.webview_return(w &C.webview_t, event_id EventId, status int, result &char)
+fn C.webview_return(w &C.webview_t, event_id &char, status int, result &char)

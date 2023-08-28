@@ -15,10 +15,31 @@ import json
 
 pub type Webview = C.webview_t
 
-pub type JSArgs = &char
+pub struct Event {
+pub:
+	instance &Webview // Pointer to the webview instance
+	event_id &char
+	args     &char
+}
 
-pub type EventId = &char
+[params]
+pub struct CreateOptions {
+	debug  bool
+	window voidptr
+	ctx    voidptr
+}
 
+[params]
+pub struct ReturnParams {
+	kind ReturnKind
+}
+
+pub enum ReturnKind {
+	value
+	error
+}
+
+// Window size hints
 pub enum Hint {
 	// Width and height are default size
 	@none = C.WEBVIEW_HINT_NONE
@@ -28,17 +49,6 @@ pub enum Hint {
 	min = C.WEBVIEW_HINT_MIN
 	// Width and height are maximum bounds
 	max = C.WEBVIEW_HINT_MAX
-}
-
-pub enum Status {
-	value
-	error
-}
-
-[params]
-pub struct CreateOptions {
-	debug  bool
-	window voidptr
 }
 
 // create creates a new webview instance. If `debug` is `true` - developer tools
@@ -65,15 +75,25 @@ pub fn (w &Webview) run() {
 }
 
 // terminate stops the main loop. It is safe to call this function from another
-// other // background thread.
+// other background thread.
 pub fn (w &Webview) terminate() {
 	C.webview_terminate(w)
 }
 
 // dispatch posts a function to be executed on the main thread. You normally do
 // not need to call this function, unless you want to tweak the native window.
-pub fn (w &Webview) dispatch(func fn (w &Webview, arg voidptr), arg voidptr) {
-	C.webview_dispatch(w, func, arg)
+pub fn (w &Webview) dispatch(func fn ()) {
+	C.webview_dispatch(w, fn [func] (w &Webview, ctx voidptr) {
+		func()
+	}, 0)
+}
+
+// dispatch_ctx posts a function to be executed on the main thread. You normally do
+// not need to call this function, unless you want to tweak the native window.
+pub fn (w &Webview) dispatch_ctx(func fn (ctx voidptr), ctx voidptr) {
+	C.webview_dispatch(w, fn [func] (w &Webview, ctx voidptr) {
+		func(ctx)
+	}, ctx)
 }
 
 // get_window returns a native window handle pointer. When using a GTK backend
@@ -120,13 +140,29 @@ pub fn (w &Webview) eval(code string) {
 	C.webview_eval(w, &char(code.str))
 }
 
-// bind binds a native C callback so that it will appear under the given name as a
-// global JavaScript function. Internally it uses webview_init(). The callback
-// receives a sequential request id, a request string and a user-provided
-// argument pointer. The request string is a JSON array of all the arguments
-// passed to the JavaScript function.
-pub fn (w &Webview) bind(name string, func fn (event_id EventId, args JSArgs, data voidptr), data voidptr) {
-	C.webview_bind(w, &char(name.str), func, data)
+// eval evaluates arbitrary JavaScript code. Evaluation happens asynchronously, also
+// the result of the expression is ignored. Use RPC bindings if you want to
+// receive notifications about the results of the evaluation.
+pub fn (e &Event) eval(code string) {
+	C.webview_eval(e.instance, &char(code.str))
+}
+
+// bind binds a callback so that it will appear under the given name as a
+// global JavaScript function. Internally it uses webview_init().
+// The callback receives an `&Event` pointer.
+pub fn (w &Webview) bind(name string, func fn (&Event)) {
+	C.webview_bind(w, &char(name.str), fn [w, func] (event_id &char, args &char, ctx voidptr) {
+		func(unsafe { &Event{w, event_id, args} })
+	}, 0)
+}
+
+// bind_ctx binds a callback so that it will appear under the given name as a
+// global JavaScript function. Internally it uses webview_init().
+// The callback receives an `7Event` pointer and a user-provided ctx pointer.
+pub fn (w &Webview) bind_ctx(name string, func fn (e &Event, ctx voidptr), ctx voidptr) {
+	C.webview_bind(w, &char(name.str), fn [w, func] (event_id &char, args &char, ctx voidptr) {
+		func(unsafe { &Event{w, event_id, args} }, ctx)
+	}, ctx)
 }
 
 // unbind removes a native C callback that was previously set by webview_bind.
@@ -138,60 +174,54 @@ pub fn (w &Webview) unbind(name string) {
 // be provided to allow the internal RPC engine to match the request and response.
 // If the status is zero - the result is expected to be a valid JSON value.
 // If the status is not zero - the result is an error JSON object.
-pub fn (w &Webview) @return[T](event_id EventId, status Status, result T) {
-	C.webview_return(w, event_id, int(status), &char(json.encode(result).str))
+pub fn (e &Event) @return[T](result T, return_params ReturnParams) {
+	C.webview_return(e.instance, e.event_id, int(return_params.kind), &char(json.encode(result).str))
 }
 
-// copy should be used if you want to return a JS result form another thread.
-// Without copying the event id can get corrupted during garbage collection and using
-// it in a `webview.result` wouldn't return data to the calling JS function.
+// async should be used if you want to return a JS result form another thread.
+// Without calling `async()`, the events id can get corrupted during garbage collection
+// and using it in a `@return` would not return data to the calling JS function.
 // Example:
 // ```v
-// fn fetch_data(event_id EventId, args JSArgs, app &App) {
-// 	spawn app.fetch_data(event_id.copy())
+// fn my_async_func(event &Event) {
+// 	spawn fetch_data(event.async())
 // }
 // ```
-pub fn (e EventId) copy() EventId {
-	return EventId(unsafe { &char(cstring_to_vstring(&char(e)).str) })
+pub fn (e &Event) async() &Event {
+	return &Event{e.instance, copy_char(e.event_id), e.args}
 }
 
-fn (args JSArgs) json[T]() ![]T {
-	return json.decode([]T, unsafe { (&char(args)).vstring() })!
-}
-
-// string decodes and returns the argument with the given index as string.
-pub fn (args JSArgs) string(idx usize) string {
-	return args.json[string]() or { return '' }[int(idx)] or { '' }
+// string decodes and returns the event argument with the given index as string.
+pub fn (e &Event) string(idx usize) string {
+	return e.args_json[string]() or { return '' }[int(idx)] or { '' }
 }
 
 // int decodes and returns the argument with the given index as integer.
-pub fn (args JSArgs) int(idx usize) int {
-	return args.json[int]() or { return 0 }[int(idx)] or { return 0 }
+pub fn (e &Event) int(idx usize) int {
+	return e.args_json[int]() or { return 0 }[int(idx)] or { return 0 }
 }
 
 // bool decodes and returns the argument with the given index as boolean.
-pub fn (args JSArgs) bool(idx usize) bool {
-	return args.json[bool]() or { return false }[int(idx)] or { return false }
+pub fn (e &Event) bool(idx usize) bool {
+	return e.args_json[bool]() or { return false }[int(idx)] or { return false }
 }
 
 // string_opt decodes and returns the argument with the given index as string option.
-pub fn (args JSArgs) string_opt(idx usize) ?string {
-	return args.json[string]() or { return none }[int(idx)] or { return none }
+pub fn (e &Event) string_opt(idx usize) ?string {
+	return e.args_json[string]() or { return none }[int(idx)] or { return none }
 }
 
 // int_opt decodes and returns the argument with the given index as integer option.
-pub fn (args JSArgs) int_opt(idx usize) ?int {
-	return args.json[int]() or { return none }[int(idx)] or { return none }
+pub fn (e &Event) int_opt(idx usize) ?int {
+	return e.args_json[int]() or { return none }[int(idx)] or { return none }
 }
 
 // bool_opt decodes and return the argument with the given index as boolean option.
-pub fn (args JSArgs) bool_opt(idx int) ?bool {
-	return args.json[bool]() or { return none }[int(idx)] or { return none }
+pub fn (e &Event) bool_opt(idx usize) ?bool {
+	return e.args_json[bool]() or { return none }[int(idx)] or { return none }
 }
 
-// decode decodes and returns `JSArgs` into a V data type.
-pub fn (args JSArgs) decode[T]() T {
-	return json.decode(T, unsafe { (&char(args)).vstring() }) or {
-		return error('Failed decoding arguments. ${err}')
-	}
+// decode decodes and returns the argument with the given index into a V data type.
+pub fn (e &Event) decode[T](idx usize) !T {
+	return json.decode(T, e.string(idx)) or { return error('Failed decoding arguments. ${err}') }
 }

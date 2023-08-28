@@ -6,27 +6,40 @@
 	<body>
 		<div id="container">
 			<h1>V webview examples</h1>
-			<hr />
-			<div>
+			<section>
 				<h2>1. Simple V function Call</h2>
 				<button onclick="handleToggle()">Toggle Setting <span id="toggle-state">on</span></button>
-			</div>
-			<div>
+			</section>
+			<section>
 				<h2>2. Sent data to V</h2>
 				<form id="login">
 					<input placeholder="What's your name?" type="text" />
 					<button type="submit">Submit</button>
 				</form>
 				<sub id="submit-info"></sub>
-			</div>
-			<div>
-				<h2>3. Async operation in V</h2>
+			</section>
+			<section>
+				<h2>3. Async operations in V</h2>
 				<div>
-					<h3>Simple things</h3>
-					<p>Breathe some air. Drink some water. Write some code.</p>
+					<h3>3.1 [Issue]: Long processing operations block the UI</h3>
+					<div>
+						<span class="dot one">.</span>
+						<span class="dot two">.</span>
+						<span class="dot three">.</span>
+					</div>
+					<div id="animation">
+						<button onclick="window.knock_knock()">Knock, knock.</button>
+					</div>
 				</div>
-				<button onclick="fetchArticle()">Fetch Article</button>
-			</div>
+				<div>
+					<h3>3.2 [Solution]: Run them in a thread</h3>
+					<div id="article">
+						<h4>My Article: Simple things</h4>
+						<p>Breathe some air. Drink some water. Write some code.</p>
+					</div>
+				</div>
+				<button onclick="fetchArticle()">Fetch another Article</button>
+			</section>
 		</div>
 		<script src="./main.js"></script>
 	</body>

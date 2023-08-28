@@ -1,40 +1,95 @@
 <html>
 	<head>
 		<title>Emoji Picker Desktop App in under 50 lines of Code</title>
-		<link rel="stylesheet" href="./style.css" />
+		<style>
+			body {
+				background: linear-gradient(to right, #274060, #1b2845);
+				color: GhostWhite;
+				font: 16px sans-serif;
+				text-align: center;
+				max-width: 600px;
+				margin: 40px auto;
+			}
+			section {
+				margin-top: 40px;
+			}
+			.dot {
+				display: inline;
+				margin-left: 0.2em;
+				margin-right: 0.2em;
+				top: -0.5em;
+				position: relative;
+				font-size: 2em;
+				opacity: 0;
+				animation: showHideDot 1.5s ease-in-out infinite;
+			}
+			.one {
+				animation-delay: 0.1s;
+			}
+			.two {
+				animation-delay: 0.2s;
+			}
+			.three {
+				animation-delay: 0.3s;
+			}
+			@keyframes showHideDot {
+				0% {
+					opacity: 0;
+				}
+				50% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+		</style>
 	</head>
 	<body>
 		<div id="container">
 			<h1>V webview examples</h1>
-			<hr />
-			<div>
+			<section>
 				<h2>1. Simple V function Call</h2>
 				<button onclick="handleToggle()">Toggle Setting <span id="toggle-state">on</span></button>
-			</div>
-			<div>
+			</section>
+			<section>
 				<h2>2. Sent data to V</h2>
 				<form id="login">
 					<input placeholder="What's your name?" type="text" />
 					<button type="submit">Submit</button>
 				</form>
 				<sub id="submit-info"></sub>
-			</div>
-			<div>
-				<h2>3. Async operation in V</h2>
+			</section>
+			<section>
+				<h2>3. Async operations in V</h2>
 				<div>
-					<h3>Simple things</h3>
-					<p>Breathe some air. Drink some water. Write some code.</p>
+					<h3>3.1 [Issue]: Long processing operations block the UI</h3>
+					<div>
+						<span class="dot one">.</span>
+						<span class="dot two">.</span>
+						<span class="dot three">.</span>
+					</div>
+					<div id="animation">
+						<button onclick="window.knock_knock()">Knock, knock.</button>
+					</div>
 				</div>
-				<button onclick="fetchArticle()">Fetch Article</button>
-			</div>
+				<div>
+					<h3>3.2 [Solution]: Run them in a thread</h3>
+					<div id="article">
+						<h4>My Article: Simple things</h4>
+						<p>Breathe some air. Drink some water. Write some code.</p>
+					</div>
+				</div>
+				<button onclick="fetchArticle()">Fetch another Article</button>
+			</section>
 		</div>
 		<script>
 			let initialized = false;
 			let settings = { toggle: false };
-			const toggleState = document.querySelector('#toggle-state');
-			const submitInfo = document.querySelector('#submit-info');
-			const heading = document.querySelector('h3');
-			const content = document.querySelector('p');
+			const toggleState = document.getElementById('toggle-state');
+			const submitInfo = document.getElementById('submit-info');
+			const heading = document.querySelector('#article h4');
+			const content = document.querySelector('#article p');
 
 			// V functions (in the scope of this example, prefixed with `window.`)
 			//

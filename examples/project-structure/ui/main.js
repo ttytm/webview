@@ -1,9 +1,9 @@
 let initialized = false;
 let settings = { toggle: false };
-const toggleState = document.querySelector('#toggle-state');
-const submitInfo = document.querySelector('#submit-info');
-const heading = document.querySelector('h3');
-const content = document.querySelector('p');
+const toggleState = document.getElementById('toggle-state');
+const submitInfo = document.getElementById('submit-info');
+const heading = document.querySelector('#article h4');
+const content = document.querySelector('#article p');
 
 // V functions (in the scope of this example, prefixed with `window.`)
 //

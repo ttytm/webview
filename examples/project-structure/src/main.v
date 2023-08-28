@@ -1,7 +1,6 @@
 import webview
 
 struct App {
-	w &webview.Webview
 mut:
 	settings struct {
 	mut:
@@ -10,14 +9,15 @@ mut:
 }
 
 fn main() {
+	w := webview.create(debug: true)
 	mut app := App{
-		w: webview.create(debug: true)
 		settings: struct {true}
 	}
-	app.bind()
-	app.w.set_title('V webview examples')
-	app.w.set_size(800, 600, .@none)
-	app.w.navigate('file://${@VMODROOT}/ui/index.html')
-	app.w.run()
-	app.w.destroy()
+	app.bind(w)
+	w.set_title('V webview examples')
+	w.set_size(800, 600, .@none)
+	w.navigate('file://${@VMODROOT}/ui/index.html')
+	w.run()
+	dump(app.settings)
+	w.destroy()
 }

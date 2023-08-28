@@ -1,11 +1,11 @@
-import webview { EventId, JSArgs }
+import webview { Event }
 import rand
 import net.http
 import time
 import json
+import os
 
 struct App {
-	w &webview.Webview
 mut:
 	settings struct {
 	mut:
@@ -20,77 +20,87 @@ struct News {
 
 // Returns a value when it's called from JS.
 // This examples uses an `App` method, leaving the data ptr available for other potential uses.
-fn (app App) get_settings(event_id EventId, _ JSArgs, data voidptr) {
-	app.w.@return(event_id, .value, app.settings)
+fn (app App) get_settings(e &Event) {
+	e.@return(app.settings)
 }
 
 // Returns a value when it's called from JS.
-// This examples uses the data ptr to receive the app object.
-fn toggle(event_id EventId, _ JSArgs, mut app App) {
+// This examples uses the context argument to receive the app struct.
+fn toggle(e &Event, mut app App) {
 	app.settings.toggle = !app.settings.toggle
 	dump(app.settings.toggle)
-	app.w.@return(event_id, .value, app.settings.toggle)
+	e.@return(app.settings.toggle)
 }
 
 // Handles received arguments.
-fn login(event_id EventId, args JSArgs, app &App) {
-	mut status := webview.Status.error
+fn login(e &Event) {
+	mut status := webview.ReturnKind.error
 	mut resp := 'An error occurred'
 	defer {
-		app.w.@return(event_id, status, resp)
+		e.@return(resp, kind: status)
 	}
-	name := args.string(0)
+	name := e.string(0)
 	println('Hello ${name}!')
 	resp = 'Data received: Check your terminal.'
 	status = .value
 }
 
-// Spawns a thread and returns the functions result from it.
-// This helps to avoid interferences with the UI when calling a function that can take some time to process
-// (E.g., it allows to keep updating the content and animations running in the meantime).
-// Let's refer to this as async example.
-fn fetch_news(event_id EventId, _ JSArgs, app &App) {
-	// Use copy if you want to return a JS result form another thread.
-	spawn app.fetch_news(event_id.copy())
+// An operation that takes some time to process like this one
+// will block the UI if it is not run from a thread.
+// The `fetch_news` example below shows how to do async processing.
+fn knock_knock(e &Event) {
+	println('Follow the white rabbit. 🐇')
+	time.sleep(1 * time.second)
+	for i in 0 .. 3 {
+		print('\r${i + 1}...')
+		os.flush()
+		time.sleep(1 * time.second)
+	}
+	println('\rKnock, Knock, Neo.')
 }
 
-fn (app &App) fetch_news(event_id EventId) {
-	mut result := News{}
-	defer {
-		// Artificially delay the result to simulate a function that does some extended processing.
-		time.sleep(time.second * 3)
-		app.w.@return(event_id, .value, result)
-	}
-
-	resp := http.get('https://jsonplaceholder.typicode.com/posts') or {
-		eprintln('Failed fetching news.')
-		return
-	}
-
-	news := json.decode([]News, resp.body) or {
-		eprintln('Failed decoding news.')
-		return
-	}
-	// Get a random article from the articles array.
-	result = news[rand.int_in_range(0, news.len - 1) or { return }]
+// Spawns a thread and returns a JS result from it.
+// This helps to avoid interferences with the UI when calling a function that can take some time to process
+// (E.g., it allows to keep updating the content and animations running in the meantime).
+fn fetch_news(e &Event) {
+	spawn fn (e &Event) {
+		mut result := News{}
+		defer {
+			// Artificially delay the result to simulate a function that does some extended processing.
+			time.sleep(time.second * 3)
+			e.@return(result)
+		}
+		resp := http.get('https://jsonplaceholder.typicode.com/posts') or {
+			eprintln('Failed fetching news.')
+			return
+		}
+		news := json.decode([]News, resp.body) or {
+			eprintln('Failed decoding news.')
+			return
+		}
+		// Get a random article from the articles array.
+		result = news[rand.int_in_range(0, news.len - 1) or { return }]
+	}(e.async()) // Use `async()` if you want to return a JS result form another thread.
 }
 
 fn main() {
 	mut app := App{
-		w: webview.create(debug: true)
 		settings: struct {true}
 	}
-	app.w.set_title('V webview examples')
-	app.w.set_size(800, 600, .@none)
+
+	w := webview.create(debug: true)
+	w.set_title('V webview examples')
+	w.set_size(800, 600, .@none)
 
 	// The first string argument is the functions name in the JS frontend.
 	// Use JS's `camelCase` convention or distinct identifiers if you prefer it.
-	app.w.bind('get_settings', app.get_settings, 0)
-	app.w.bind('toggle_setting', toggle, &app)
-	app.w.bind('login', login, &app)
-	app.w.bind('fetch_news', fetch_news, &app)
+	w.bind('get_settings', app.get_settings)
+	w.bind_ctx('toggle_setting', toggle, &app) // Alternatively use the ctx ptr to pass a struct.
+	w.bind('login', login)
+	w.bind('knock_knock', knock_knock)
+	w.bind('fetch_news', fetch_news)
 
-	app.w.navigate('file://${@VMODROOT}/index.html')
-	app.w.run()
-	app.w.destroy()
+	w.navigate('file://${@VMODROOT}/index.html')
+	w.run()
+	w.destroy()
 }

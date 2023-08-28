@@ -69,41 +69,44 @@ v run $HOME/.vmodules/webview/build.vsh
 <br>
 
 ```v ignore
-import webview { EventId, JSArgs } // For installations from source
+import webview // For installations from source
 // import ttytm.webview // For installations as vpm module
-
-struct App {
-	w &webview.Webview
-}
 
 const html = '<!DOCTYPE html>
 <html lang="en">
 	<head>
 		<style>
 			body {
-				background-color: SlateGray;
+				background: linear-gradient(to right, #274060, #1B2845);
 				color: GhostWhite;
+				font-family: sans-serif;
 				text-align: center;
 			}
 		</style>
 	</head>
 	<body>
-		<h1>My App Content!</h1>
-		<button onclick="my_v_func()">Call V!</button>
+		<h1>Your App Content!</h1>
+		<button onclick="callV()">Call V!</button>
 	</body>
+	<script>
+		async function callV() {
+			console.log(await window.my_v_func(\'Hello from JS!\'));
+		}
+	</script>
 </html>'
 
-fn my_v_func(event_id EventId, args JSArgs, app &App) {
-	println('Hello From V!')
+fn my_v_func(e &webview.Event) {
+	println('Hello from V from V!')
+	e.eval("console.log('Hello from V from JS!');")
+	str_arg := e.string(0) // Get string arg at index `0`
+	e.@return(str_arg + ' Hello back from V!')
 }
 
-mut app := App{
-	w: webview.create(debug: true)
-}
-app.w.bind('my_v_func', my_v_func, app)
-app.w.set_size(600, 400, .@none)
-app.w.set_html(html)
-app.w.run()
+w := webview.create(debug: true)
+w.bind('my_v_func', my_v_func)
+w.set_size(600, 400, .@none)
+w.set_html(html)
+w.run()
 ```
 
 Extended examples can be found in the [examples](https://github.com/ttytm/webview/tree/master/examples) directory.

@@ -9,12 +9,12 @@ struct News {
 	body  string
 }
 
-fn (app &App) fetch_news(event_id webview.EventId) {
+fn fetch_news_(e &webview.Event) {
 	mut result := News{}
 	defer {
 		// Artificially delay the result to simulate a function that does some extended processing.
 		time.sleep(time.second * 3)
-		app.w.@return(event_id, .value, result)
+		e.@return(result)
 	}
 
 	resp := http.get('https://jsonplaceholder.typicode.com/posts') or {

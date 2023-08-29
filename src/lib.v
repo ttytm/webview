@@ -140,13 +140,6 @@ pub fn (w &Webview) eval(code string) {
 	C.webview_eval(w, &char(code.str))
 }
 
-// eval evaluates arbitrary JavaScript code. This is a shorthand for `e.instance.eval()`.
-// Evaluation happens asynchronously, also the result of the expression is ignored.
-// Use RPC bindings if you want to receive notifications about the results of the evaluation.
-pub fn (e &Event) eval(code string) {
-	C.webview_eval(e.instance, &char(code.str))
-}
-
 // bind binds a callback so that it will appear under the given name as a
 // global JavaScript function. Internally it uses webview_init().
 // The callback receives an `&Event` pointer.
@@ -189,6 +182,32 @@ pub fn (e &Event) @return[T](result T, return_params ReturnParams) {
 // ```
 pub fn (e &Event) async() &Event {
 	return &Event{e.instance, copy_char(e.event_id), e.args}
+}
+
+// dispatch posts a function to be executed on the main thread. You normally do
+// not need to call this function, unless you want to tweak the native window.
+// This is a shorthand for `e.instance.dispatch()`.
+pub fn (e &Event) dispatch(func fn ()) {
+	C.webview_dispatch(e.instance, fn [func] (w &Webview, ctx voidptr) {
+		func()
+	}, 0)
+}
+
+// dispatch_ctx posts a function to be executed on the main thread. You normally do
+// not need to call this function, unless you want to tweak the native window.
+// This is a shorthand for `e.instance.dispatch_ctx()`.
+pub fn (e &Event) dispatch_ctx(func fn (ctx voidptr), ctx voidptr) {
+	C.webview_dispatch(e.instance, fn [func] (w &Webview, ctx voidptr) {
+		func(ctx)
+	}, ctx)
+}
+
+// eval evaluates arbitrary JavaScript code. Evaluation happens asynchronously, also
+// the result of the expression is ignored. Use RPC bindings if you want to receive
+// notifications about the results of the evaluation.
+// This is a shorthand for `e.instance.eval()`.
+pub fn (e &Event) eval(code string) {
+	C.webview_eval(e.instance, &char(code.str))
 }
 
 // string decodes and returns the event argument with the given index as string.

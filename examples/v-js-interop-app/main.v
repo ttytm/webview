@@ -49,7 +49,7 @@ fn login(e &Event) {
 // will block the UI if it is not run from a thread.
 // The `fetch_news` example below shows how to do async processing.
 fn knock_knock(e &Event) {
-	println('Follow the white rabbit. 🐇')
+	println('Follow the white rabbit 🐇')
 	time.sleep(1 * time.second)
 	for i in 0 .. 3 {
 		print('\r${i + 1}...')

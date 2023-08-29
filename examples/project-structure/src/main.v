@@ -18,6 +18,5 @@ fn main() {
 	w.set_size(800, 600, .@none)
 	w.navigate('file://${@VMODROOT}/ui/index.html')
 	w.run()
-	dump(app.settings)
 	w.destroy()
 }

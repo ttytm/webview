@@ -1,5 +1,6 @@
 import webview { Event, Webview }
 import time
+import os
 
 fn (mut app App) bind(w &Webview) {
 	// The first string arg names the functions for JS usage. E.g. use JS's `camelCase` convention if you prefer it.
@@ -41,9 +42,14 @@ fn login(e &Event) {
 // will block the UI if it is not run from a thread.
 // The `fetch_news` example below shows how to do async processing.
 fn knock_knock(e &Event) {
-	println('Follow the white rabbit. 🐇')
-	time.sleep(3 * time.second)
-	println('Knock, Knock, Neo.')
+	println('Follow the white rabbit 🐇')
+	time.sleep(1 * time.second)
+	for i in 0 .. 3 {
+		print('\r${i + 1}...')
+		os.flush()
+		time.sleep(1 * time.second)
+	}
+	println('\rKnock, Knock, Neo.')
 }
 
 // Spawns a thread and returns a JS result from it.

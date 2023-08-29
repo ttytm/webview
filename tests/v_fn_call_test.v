@@ -12,7 +12,6 @@ fn test_fn_call() {
 	mut fns_called := 0
 	mut ref := &fns_called
 
-	// We call `w.terminate()` from the last V function that is called from JS.
 	// We check if the V functions are called succesfully within 30 seconds.
 	// Otherwise the window stays open and the test can run infinitely.
 	spawn fn [w, ref] () {
@@ -42,7 +41,6 @@ fn test_fn_call() {
 		println(p)
 		assert p.name == 'john'
 		assert p.age == 30
-		// We can terminate the window after the last tested function was called
 	}, fns_called)
 
 	w.set_html('<html style="background: #1B2845; color: #eee">

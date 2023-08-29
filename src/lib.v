@@ -140,9 +140,9 @@ pub fn (w &Webview) eval(code string) {
 	C.webview_eval(w, &char(code.str))
 }
 
-// eval evaluates arbitrary JavaScript code. Evaluation happens asynchronously, also
-// the result of the expression is ignored. Use RPC bindings if you want to
-// receive notifications about the results of the evaluation.
+// eval evaluates arbitrary JavaScript code. This is a shorthand for `e.instance.eval()`.
+// Evaluation happens asynchronously, also the result of the expression is ignored.
+// Use RPC bindings if you want to receive notifications about the results of the evaluation.
 pub fn (e &Event) eval(code string) {
 	C.webview_eval(e.instance, &char(code.str))
 }

@@ -101,7 +101,7 @@ fn build(silent bool) {
 		eprintln(build_res.output)
 		exit(1)
 	}
-	println('\rSuccessfully built webview library.')
+	println('\rSuccessfully built the webview library.')
 }
 
 fn run(cmd cli.Command) ! {

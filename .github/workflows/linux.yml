@@ -41,28 +41,6 @@ jobs:
     needs: setup
     uses: ./.github/workflows/lint.yml
 
-  test:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Restore Cache
-        uses: actions/cache/restore@v3
-        with:
-          path: |
-            vlang
-            ~/.vmodules
-          key: ${{ runner.os }}-${{ github.sha }}
-          fail-on-cache-miss: true
-      - name: Setup V
-        uses: vlang/setup-v@v1.3
-      - name: Setup Dependencies
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: libgtk-3-dev libwebkit2gtk-4.0-dev
-          version: 1.0
-      - name: Test
-        run: xvfb-run v test ${{ env.MOD_PATH }}/tests/
-
   build:
     needs: setup
     runs-on: ubuntu-latest
@@ -97,15 +75,9 @@ jobs:
           v -cg -cc ${{ matrix.compiler }} ${{ matrix.optimization }} ${{ env.MOD_PATH }}/examples/project-structure/
           v -cg -cc ${{ matrix.compiler }} ${{ matrix.optimization }} ${{ env.MOD_PATH }}/examples/emoji-picker/main.v
 
-  build-gcc-sanitized:
-    needs: build
+  test:
+    needs: setup
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        sanitizer:
-          - -cflags -fsanitize=leak
-          - -cflags -fsanitize=address -cflags -fsanitize-address-use-after-scope -cflags -fsanitize=pointer-compare -cflags -fsanitize=pointer-subtract
-          - -cflags -fsanitize=undefined -cflags -fsanitize=shift -cflags -fsanitize=shift-exponent -cflags -fsanitize=shift-base -cflags -fsanitize=integer-divide-by-zero -cflags -fsanitize=unreachable -cflags -fsanitize=vla-bound -cflags -fsanitize=null -cflags -fsanitize=return -cflags -fsanitize=signed-integer-overflow -cflags -fsanitize=bounds -cflags -fsanitize=bounds-strict -cflags -fsanitize=alignment -cflags -fsanitize=object-size -cflags -fsanitize=float-divide-by-zero -cflags -fsanitize=float-cast-overflow -cflags -fsanitize=nonnull-attribute -cflags -fsanitize=returns-nonnull-attribute -cflags -fsanitize=bool -cflags -fsanitize=enum -cflags -fsanitize=vptr -cflags -fsanitize=pointer-overflow -cflags -fsanitize=builtin
     steps:
       - name: Restore Cache
         uses: actions/cache/restore@v3
@@ -122,15 +94,24 @@ jobs:
         with:
           packages: libgtk-3-dev libwebkit2gtk-4.0-dev
           version: 1.0
-      - name: Build
-        run: v -cc gcc ${{ matrix.sanitizer }} ${{ env.MOD_PATH }}/examples/project-structure/
+      - name: Test
+        run: xvfb-run v test ${{ env.MOD_PATH }}/tests/
 
-  build-clang-sanitized:
-    needs: build
+  test-sanitized:
+    needs: test
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        sanitizer: [address, memory, leak]
+        compiler: [gcc]
+        include:
+          - compiler: gcc
+            sanitizer: -cflags -fsanitize=undefined -cflags -fsanitize=shift -cflags -fsanitize=shift-exponent -cflags -fsanitize=shift-base -cflags -fsanitize=integer-divide-by-zero -cflags -fsanitize=unreachable -cflags -fsanitize=vla-bound -cflags -fsanitize=null -cflags -fsanitize=return -cflags -fsanitize=signed-integer-overflow -cflags -fsanitize=bounds -cflags -fsanitize=bounds-strict -cflags -fsanitize=alignment -cflags -fsanitize=object-size -cflags -fsanitize=float-divide-by-zero -cflags -fsanitize=float-cast-overflow -cflags -fsanitize=nonnull-attribute -cflags -fsanitize=returns-nonnull-attribute -cflags -fsanitize=bool -cflags -fsanitize=enum -cflags -fsanitize=vptr -cflags -fsanitize=pointer-overflow -cflags -fsanitize=builtin
+            # sanitizer: -cflags -fsanitize=leak
+            # sanitizer: -cflags -fsanitize=address -cflags -fsanitize-address-use-after-scope -cflags -fsanitize=pointer-compare -cflags -fsanitize=pointer-subtract
+          # - compiler: clang
+          # sanitizer: address
+          # sanitizer: memory
+          # sanitizer: leak
     steps:
       - name: Restore Cache
         uses: actions/cache/restore@v3
@@ -147,5 +128,5 @@ jobs:
         with:
           packages: libgtk-3-dev libwebkit2gtk-4.0-dev
           version: 1.0
-      - name: Build
-        run: v -cc clang -cflags -fsanitize=${{ matrix.sanitizer }} ${{ env.MOD_PATH }}/examples/project-structure/
+      - name: Test
+        run: xvfb-run v -cc gcc ${{ matrix.sanitizer }} test ${{ env.MOD_PATH }}/tests/

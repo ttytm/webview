@@ -26,7 +26,6 @@ pub:
 pub struct CreateOptions {
 	debug  bool
 	window voidptr
-	ctx    voidptr
 }
 
 [params]

@@ -1,4 +1,5 @@
-import webview
+module webview
+
 import time
 
 struct Person {
@@ -7,7 +8,7 @@ struct Person {
 }
 
 fn test_fn_call() {
-	w := webview.create(debug: true)
+	w := create(debug: true)
 
 	mut fns_called := 0
 	mut ref := &fns_called
@@ -27,11 +28,11 @@ fn test_fn_call() {
 		assert false
 	}()
 
-	w.bind_ctx('v_fn', fn (e &webview.Event, mut fns_called &int) {
+	w.bind_ctx('v_fn', fn (e &Event, mut fns_called &int) {
 		fns_called++
 		assert e.string(0) == 'foo'
 	}, fns_called)
-	w.bind_ctx('v_fn_with_obj_arg', fn (e &webview.Event, mut fns_called &int) {
+	w.bind_ctx('v_fn_with_obj_arg', fn (e &Event, mut fns_called &int) {
 		fns_called++
 		p := e.decode[Person](0) or {
 			eprintln(err)

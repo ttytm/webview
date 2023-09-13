@@ -6,16 +6,13 @@ import builtin.wchar
 #flag darwin -DWEBVIEW_COCOA -framework WebKit -stdlib=libc++ -lstdc++
 #flag windows -DWEBVIEW_EDGE -static -ladvapi32 -lole32 -lshell32 -lshlwapi -luser32 -lversion -lstdc++
 
-$if windows {
-	#flag -I @VMODROOT/src/icon.h
-	#flag @VMODROOT/src/icon.c
-}
+#flag -I @VMODROOT/src/icon.h
+#flag @VMODROOT/src/icon.c
 
 #flag @VMODROOT/src/webview.o
 #include "@VMODROOT/src/webview.h"
-$if windows {
-	#include "@VMODROOT/src/icon.h"
-}
+#include "@VMODROOT/src/icon.h"
+
 $if linux {
 	#pkgconfig gtk+-3.0
 	#pkgconfig webkit2gtk-4.0
@@ -35,7 +32,7 @@ fn C.webview_dispatch(w &C.webview_t, func fn (w &C.webview_t, ctx voidptr), ctx
 
 fn C.webview_get_window(w &C.webview_t) voidptr
 
-fn C.set_window_icon(application_title &wchar.Character, ico_file_path &wchar.Character) bool
+fn C.set_icon(w voidptr, ico_file_path &wchar.Character) bool
 
 fn C.webview_set_title(w &C.webview_t, title &char)
 

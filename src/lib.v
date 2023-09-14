@@ -45,9 +45,9 @@ pub enum Hint {
 	// Window size can not be changed by a user
 	fixed = C.WEBVIEW_HINT_FIXED
 	// Width and height are minimum bounds
-	min = C.WEBVIEW_HINT_MIN
+	min   = C.WEBVIEW_HINT_MIN
 	// Width and height are maximum bounds
-	max = C.WEBVIEW_HINT_MAX
+	max   = C.WEBVIEW_HINT_MAX
 }
 
 // create creates a new webview instance. If `debug` is `true` - developer tools

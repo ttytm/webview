@@ -24,7 +24,7 @@ BOOL set_icon_win32(const void *ptr, const wchar_t *iconFilePath)
     DestroyIcon(hIcon);
     return TRUE;
 }
-#else
+#elif __linux__
 bool set_icon_linux(const void *ptr, const char *iconFilePath)
 {
     // Linux code to set the icon for a GTK window

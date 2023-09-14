@@ -51,18 +51,16 @@ pub enum Hint {
 	max   = C.WEBVIEW_HINT_MAX
 }
 
-const (
-	default_title = 'webview'
-)
+pub const no_result = unsafe { nil }
 
-// create creates a new webview instance. If `debug` is `true` - developer tools
-// will be enabled (if the platform supports them). The `window` parameter can be
-// a pointer to the native window handle. If it's non-null - then child WebView
-// is embedded into the given parent window. Otherwise a new window is created.
-// Depending on the platform, a GtkWindow, NSWindow or HWND pointer can be
-// passed here. Returns null on failure. Creation can fail for various reasons
-// such as when required runtime dependencies are missing or when window creation
-// fails.
+// create creates a new webview instance. Optionally, a `debug` and `window` parameter can be passed.
+// If `debug` is `true` - developer tools will be enabled (if the platform supports them).
+// The `window` parameter can be a pointer to the native window handle. If it's non-null, then the
+// WebView is embedded into the given parent window. Otherwise a new window is created.
+// Depending on the platform, a GtkWindow, NSWindow or HWND pointer can be passed here.
+// Returns null on failure. Creation can fail for various reasons such as when required runtime
+// dependencies are missing or when window creation fails.
+
 pub fn create(opts CreateOptions) &Webview {
 	return C.webview_create(int(opts.debug), opts.window)
 }

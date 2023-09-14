@@ -50,6 +50,8 @@ pub enum Hint {
 	max   = C.WEBVIEW_HINT_MAX
 }
 
+pub const no_result = unsafe { nil }
+
 // create creates a new webview instance. If `debug` is `true` - developer tools
 // will be enabled (if the platform supports them). The `window` parameter can be
 // a pointer to the native window handle. If it's non-null - then child WebView
@@ -142,18 +144,26 @@ pub fn (w &Webview) eval(code string) {
 // bind binds a callback so that it will appear under the given name as a
 // global JavaScript function. Internally it uses webview_init().
 // The callback receives an `&Event` pointer.
-pub fn (w &Webview) bind(name string, func fn (&Event)) {
-	C.webview_bind(w, &char(name.str), fn [w, func] (event_id &char, args &char, ctx voidptr) {
-		func(unsafe { &Event{w, event_id, args} })
+pub fn (w &Webview) bind[T](name string, func fn (&Event) T) {
+	C.webview_bind(w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
+		e := unsafe { &Event{w, event_id, args} }
+		spawn fn [func] [T](e &Event) {
+			result := func(e)
+			e.@return(result)
+		}(e.async())
 	}, 0)
 }
 
 // bind_ctx binds a callback so that it will appear under the given name as a
 // global JavaScript function. Internally it uses webview_init().
 // The callback receives an `7Event` pointer and a user-provided ctx pointer.
-pub fn (w &Webview) bind_ctx(name string, func fn (e &Event, ctx voidptr), ctx voidptr) {
-	C.webview_bind(w, &char(name.str), fn [w, func] (event_id &char, args &char, ctx voidptr) {
-		func(unsafe { &Event{w, event_id, args} }, ctx)
+pub fn (w &Webview) bind_ctx[T](name string, func fn (e &Event, ctx voidptr) T, ctx voidptr) {
+	C.webview_bind(w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
+		e := unsafe { &Event{w, event_id, args} }
+		spawn fn [func, ctx] [T](e &Event) {
+			result := func(e, ctx)
+			e.@return(result)
+		}(e.async())
 	}, ctx)
 }
 
@@ -167,7 +177,9 @@ pub fn (w &Webview) unbind(name string) {
 // If the status is zero - the result is expected to be a valid JSON value.
 // If the status is not zero - the result is an error JSON object.
 pub fn (e &Event) @return[T](result T, return_params ReturnParams) {
-	C.webview_return(e.instance, e.event_id, int(return_params.kind), &char(json.encode(result).str))
+	$if result !is voidptr {
+		C.webview_return(e.instance, e.event_id, 0, &char(json.encode(result).str))
+	}
 }
 
 // async should be used if you want to return a JS result form another thread.

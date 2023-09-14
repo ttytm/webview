@@ -176,7 +176,7 @@ pub fn (w &Webview) unbind(name string) {
 // be provided to allow the internal RPC engine to match the request and response.
 // If the status is zero - the result is expected to be a valid JSON value.
 // If the status is not zero - the result is an error JSON object.
-pub fn (e &Event) @return[T](result T, return_params ReturnParams) {
+fn (e &Event) @return[T](result T, return_params ReturnParams) {
 	$if result is voidptr {
 		C.webview_return(e.instance, e.event_id, 0, &char(''.str))
 	} $else {
@@ -193,7 +193,7 @@ pub fn (e &Event) @return[T](result T, return_params ReturnParams) {
 // 	spawn fetch_data(event.async())
 // }
 // ```
-pub fn (e &Event) async() &Event {
+fn (e &Event) async() &Event {
 	return &Event{e.instance, copy_char(e.event_id), copy_char(e.args)}
 }
 

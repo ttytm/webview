@@ -106,7 +106,7 @@ pub fn (w &Webview) get_window() voidptr {
 }
 
 // set_icon updates the icon for the native window. It supports Windows HWND and Linux GTK windows
-// under X11 (Window application mapping under Wayland is based on the desktop file entry name).
+// under X11 - Under Wayland, window application mapping is based on the desktop file entry name.
 // TODO: add macOS support
 pub fn (w &Webview) set_icon(icon_file_path string) ! {
 	$if windows {

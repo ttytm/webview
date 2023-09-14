@@ -109,7 +109,17 @@ w.set_html(html)
 w.run()
 ```
 
-Extended examples can be found in the [examples](https://github.com/ttytm/webview/tree/master/examples) directory.
+Output when pressing <kbd>Call V!</kdb>
+
+```
+Hello from V from V!
+CONSOLE LOG Hello from V from JS!
+CONSOLE LOG Hello from JS! Hello back from V!
+```
+
+---
+
+Extended examples can be found in the [`examples/`](https://github.com/ttytm/webview/tree/master/examples) directory.\
 An application example that uses this webview binding with SvelteKit for the UI is [emoji-mart-desktop](https://github.com/ttytm/emoji-mart-desktop).
 
 The overview of exported functions is accessible in the repositories [`src/lib.v`](https://github.com/ttytm/webview/blob/master/src/lib.v)

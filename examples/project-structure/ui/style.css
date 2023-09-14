@@ -11,6 +11,13 @@ section {
 	margin-top: 40px;
 }
 
+#article {
+	border: 1px solid rgba(240, 248, 255, 0.2);
+	border-radius: 0.5em;
+	margin: 10px;
+	padding: 0px 10px 5px;
+}
+
 .dot {
 	display: inline;
 	margin-left: 0.2em;

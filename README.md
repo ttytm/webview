@@ -95,11 +95,11 @@ const html = '<!DOCTYPE html>
 	</script>
 </html>'
 
-fn my_v_func(e &webview.Event) {
+fn my_v_func(e &webview.Event) string {
 	println('Hello from V from V!')
 	e.eval("console.log('Hello from V from JS!');")
 	str_arg := e.string(0) // Get string arg at index `0`
-	e.@return(str_arg + ' Hello back from V!')
+	return str_arg + ' Hello back from V!'
 }
 
 w := webview.create(debug: true)

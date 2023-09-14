@@ -5,8 +5,7 @@ const submitInfo = document.getElementById('submit-info');
 const heading = document.querySelector('#article h4');
 const content = document.querySelector('#article p');
 
-// V functions (in the scope of this example, prefixed with `window.`)
-//
+// V functions in the scope of this example are prefixed with `window.`
 // The `window.` prefix is not required. But it is a common pattern in webview examples.
 // For semantic reasons and to help distinguish functions as your project grows, this can be a helpful pattern.
 // Just use the style and convention you prefer when naming the webview JS functions.
@@ -35,8 +34,8 @@ async function fetchArticle() {
 	}
 	heading.innerHTML = 'Loading';
 	content.innerHTML = `<span class="dot one">.</span>
-					<span class="dot two">.</span>
-					<span class="dot three">.</span>`;
+		<span class="dot two">.</span>
+		<span class="dot three">.</span>`;
 	// V function call
 	const news = await window.fetch_news();
 	heading.innerHTML = news.title;

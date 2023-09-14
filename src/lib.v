@@ -192,7 +192,7 @@ pub fn (e &Event) @return[T](result T, return_params ReturnParams) {
 // }
 // ```
 pub fn (e &Event) async() &Event {
-	return &Event{e.instance, copy_char(e.event_id), e.args}
+	return &Event{e.instance, copy_char(e.event_id), copy_char(e.args)}
 }
 
 // dispatch posts a function to be executed on the main thread. You normally do

@@ -1,30 +1,29 @@
 import time
 import json
 import rand
-import webview
 import net.http
 
-struct News {
+struct Article {
 	title string
 	body  string
 }
 
-fn fetch_news_(e &webview.Event) {
-	mut result := News{}
-	defer {
-		// Artificially delay the result to simulate a function that does some extended processing.
-		time.sleep(time.second * 3)
-		e.@return(result)
-	}
-
+fn fetch_news_() Article {
+	mut result := Article{}
 	resp := http.get('https://jsonplaceholder.typicode.com/posts') or {
 		eprintln('Failed fetching news.')
-		return
+		return result
 	}
-	news := json.decode([]News, resp.body) or {
+
+	// Further delay the return using the sleep function,
+	// simulating a longer taking fetch or expensive computing.
+	time.sleep(time.second * 2)
+
+	news := json.decode([]Article, resp.body) or {
 		eprintln('Failed decoding news.')
-		return
+		return result
 	}
 	// Get a random article from the articles array.
-	result = news[rand.int_in_range(0, news.len - 1) or { return }]
+	result = news[rand.int_in_range(0, news.len - 1) or { return result }]
+	return result
 }

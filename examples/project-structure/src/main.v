@@ -2,16 +2,18 @@ import webview
 
 struct App {
 mut:
-	settings struct {
-	mut:
-		toggle bool
-	}
+	settings Settings
+}
+
+struct Settings {
+mut:
+	toggle bool
 }
 
 fn main() {
 	w := webview.create(debug: true)
 	mut app := App{
-		settings: struct {true}
+		settings: Settings{true}
 	}
 	app.bind(w)
 	w.set_title('V webview examples')

@@ -159,18 +159,26 @@ pub fn (w &Webview) eval(code string) {
 // bind binds a callback so that it will appear under the given name as a
 // global JavaScript function. Internally it uses webview_init().
 // The callback receives an `&Event` pointer.
-pub fn (w &Webview) bind(name string, func fn (&Event)) {
-	C.webview_bind(w, &char(name.str), fn [w, func] (event_id &char, args &char, ctx voidptr) {
-		func(unsafe { &Event{w, event_id, args} })
+pub fn (w &Webview) bind[T](name string, func fn (&Event) T) {
+	C.webview_bind(w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
+		e := unsafe { &Event{w, event_id, args} }
+		spawn fn [func] [T](e &Event) {
+			result := func(e)
+			e.@return(result)
+		}(e.async())
 	}, 0)
 }
 
 // bind_ctx binds a callback so that it will appear under the given name as a
 // global JavaScript function. Internally it uses webview_init().
 // The callback receives an `7Event` pointer and a user-provided ctx pointer.
-pub fn (w &Webview) bind_ctx(name string, func fn (e &Event, ctx voidptr), ctx voidptr) {
-	C.webview_bind(w, &char(name.str), fn [w, func] (event_id &char, args &char, ctx voidptr) {
-		func(unsafe { &Event{w, event_id, args} }, ctx)
+pub fn (w &Webview) bind_ctx[T](name string, func fn (e &Event, ctx voidptr) T, ctx voidptr) {
+	C.webview_bind(w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
+		e := unsafe { &Event{w, event_id, args} }
+		spawn fn [func, ctx] [T](e &Event) {
+			result := func(e, ctx)
+			e.@return(result)
+		}(e.async())
 	}, ctx)
 }
 
@@ -183,8 +191,12 @@ pub fn (w &Webview) unbind(name string) {
 // be provided to allow the internal RPC engine to match the request and response.
 // If the status is zero - the result is expected to be a valid JSON value.
 // If the status is not zero - the result is an error JSON object.
-pub fn (e &Event) @return[T](result T, return_params ReturnParams) {
-	C.webview_return(e.instance, e.event_id, int(return_params.kind), &char(json.encode(result).str))
+fn (e &Event) @return[T](result T, return_params ReturnParams) {
+	$if result is voidptr {
+		C.webview_return(e.instance, e.event_id, 0, &char(''.str))
+	} $else {
+		C.webview_return(e.instance, e.event_id, 0, &char(json.encode(result).str))
+	}
 }
 
 // async should be used if you want to return a JS result form another thread.
@@ -196,8 +208,8 @@ pub fn (e &Event) @return[T](result T, return_params ReturnParams) {
 // 	spawn fetch_data(event.async())
 // }
 // ```
-pub fn (e &Event) async() &Event {
-	return &Event{e.instance, copy_char(e.event_id), e.args}
+fn (e &Event) async() &Event {
+	return &Event{e.instance, copy_char(e.event_id), copy_char(e.args)}
 }
 
 // dispatch posts a function to be executed on the main thread. You normally do

@@ -95,11 +95,11 @@ const html = '<!DOCTYPE html>
 	</script>
 </html>'
 
-fn my_v_func(e &webview.Event) {
+fn my_v_func(e &webview.Event) string {
 	println('Hello from V from V!')
 	e.eval("console.log('Hello from V from JS!');")
 	str_arg := e.string(0) // Get string arg at index `0`
-	e.@return(str_arg + ' Hello back from V!')
+	return str_arg + ' Hello back from V!'
 }
 
 w := webview.create(debug: true)
@@ -109,7 +109,17 @@ w.set_html(html)
 w.run()
 ```
 
-Extended examples can be found in the [examples](https://github.com/ttytm/webview/tree/master/examples) directory.
+Output when pressing <kbd>Call V!</kdb>
+
+```
+Hello from V from V!
+CONSOLE LOG Hello from V from JS!
+CONSOLE LOG Hello from JS! Hello back from V!
+```
+
+---
+
+Extended examples can be found in the [`examples/`](https://github.com/ttytm/webview/tree/master/examples) directory.\
 An application example that uses this webview binding with SvelteKit for the UI is [emoji-mart-desktop](https://github.com/ttytm/emoji-mart-desktop).
 
 The overview of exported functions is accessible in the repositories [`src/lib.v`](https://github.com/ttytm/webview/blob/master/src/lib.v)

@@ -95,7 +95,7 @@ jobs:
           packages: libgtk-3-dev libwebkit2gtk-4.0-dev
           version: 1.0
       - name: Test
-        run: xvfb-run v test ${{ env.MOD_PATH }}/tests/
+        run: xvfb-run v -stats test ${{ env.MOD_PATH }}/tests/
 
   test-sanitized:
     needs: test

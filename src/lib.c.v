@@ -6,8 +6,8 @@ import builtin.wchar
 #flag darwin -DWEBVIEW_COCOA -framework WebKit -stdlib=libc++ -lstdc++
 #flag windows -DWEBVIEW_EDGE -static -ladvapi32 -lole32 -lshell32 -lshlwapi -luser32 -lversion -lstdc++
 
-#flag -I @VMODROOT/src/icon/icon.h
-#flag @VMODROOT/src/icon/icon.c
+#flag -I@VMODROOT/src/icon
+#flag @VMODROOT/src/icon/icon.o
 
 #flag @VMODROOT/src/webview.o
 #include "@VMODROOT/src/webview.h"

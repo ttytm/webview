@@ -178,7 +178,7 @@ pub fn (w &Webview) unbind(name string) {
 // If the status is not zero - the result is an error JSON object.
 pub fn (e &Event) @return[T](result T, return_params ReturnParams) {
 	$if result is voidptr {
-		C.webview_return(e.instance, e.event_id, 0, ''.str)
+		C.webview_return(e.instance, e.event_id, 0, &char(''.str))
 	} $else {
 		C.webview_return(e.instance, e.event_id, 0, &char(json.encode(result).str))
 	}

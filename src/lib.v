@@ -112,13 +112,11 @@ pub fn (w &Webview) set_icon(icon_file_path string) ! {
 		if !C.set_icon_win32(w.get_window(), wchar.from_string(icon_file_path)) {
 			return error('Failed to set custom icon.')
 		}
-	}
-	$else $if linux {
+	} $else $if linux {
 		if !C.set_icon_linux(w.get_window(), &char(icon_file_path.str)) {
 			return error('Failed to set custom icon.')
 		}
-	}
-	$else {
+	} $else {
 		return error('Unsupported OS.')
 	}
 }

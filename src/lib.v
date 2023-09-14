@@ -105,19 +105,20 @@ pub fn (w &Webview) get_window() voidptr {
 	return C.webview_get_window(w)
 }
 
-// set_icon change the default icon for webview.
-// Currently only Windows is supported.
+// set_icon updates the icon for the native window. It supports Windows HWND and Linux GTK windows
+// under X11 (Window application mapping under Wayland is based on the desktop file entry name).
+// TODO: add macOS support
 pub fn (w &Webview) set_icon(icon_file_path string) ! {
 	$if windows {
 		if !C.set_icon_win32(w.get_window(), wchar.from_string(icon_file_path)) {
-			return error('Failed to set custom icon.')
+			return error('Failed to set icon.')
 		}
 	} $else $if linux {
 		if !C.set_icon_linux(w.get_window(), &char(icon_file_path.str)) {
-			return error('Failed to set custom icon.')
+			return error('Failed to set icon.')
 		}
 	} $else {
-		return error('Unsupported OS.')
+		return error('Failed to set icon. Unsupported OS.')
 	}
 }
 

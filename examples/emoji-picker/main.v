@@ -14,7 +14,7 @@ fn play_sound(_ &webview.Event) {
 w := webview.create(debug: true)
 w.set_title('Emoji Picker')
 w.set_size(352, 435, .@none)
-w.bind('play_sound', play_sound)
+w.bind[voidptr]('play_sound', play_sound)
 w.navigate('file://${@VMODROOT}/index.html')
 w.run()
 w.destroy()

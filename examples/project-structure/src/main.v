@@ -19,7 +19,7 @@ fn main() {
 	w.set_title('V webview examples')
 	w.set_size(800, 600, .@none)
 	w.navigate('file://${@VMODROOT}/ui/index.html')
-	w.set_icon('${@VMODROOT}/assets/icon.ico') or { panic(err) }
+	w.set_icon('${@VMODROOT}/assets/icon.ico')!
 	w.run()
 	w.destroy()
 }

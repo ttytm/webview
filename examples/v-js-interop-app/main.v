@@ -91,7 +91,7 @@ fn main() {
 	w := webview.create(debug: true)
 	w.set_title('V webview examples')
 	w.set_size(800, 600, .@none)
-
+	w.set_icon('${@VMODROOT}/icon.ico') or { panic(err) }
 	// The first string argument is the functions name in the JS frontend.
 	// Use JS's `camelCase` convention or distinct identifiers if you prefer it.
 	w.bind('get_settings', app.get_settings)

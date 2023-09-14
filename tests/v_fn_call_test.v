@@ -1,5 +1,4 @@
-module webview
-
+import webview
 import time
 
 struct Person {
@@ -8,7 +7,7 @@ struct Person {
 }
 
 fn test_fn_call() {
-	w := create(debug: true)
+	w := webview.create(debug: true)
 
 	mut fns_called := 0
 	mut ref := &fns_called

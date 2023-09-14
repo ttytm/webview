@@ -64,13 +64,7 @@ const (
 // such as when required runtime dependencies are missing or when window creation
 // fails.
 pub fn create(opts CreateOptions) &Webview {
-	ctx := C.webview_create(int(opts.debug), opts.window)
-	w := unsafe { &Webview(ctx) }
-	w.set_title(webview.default_title)
-	$if windows {
-		w.set_icon('${@VMODROOT}/assets/icon.ico') or { panic(err) }
-	}
-	return w
+	return C.webview_create(int(opts.debug), opts.window)
 }
 
 // destroy destroys a webview and closes the native window.
@@ -116,8 +110,14 @@ pub fn (w &Webview) get_window() voidptr {
 // set_icon change the default icon for webview.
 // Currently only Windows is supported.
 pub fn (w &Webview) set_icon(icon_file_path string) ! {
-	if !C.set_icon(w.get_window(), wchar.from_string(icon_file_path)) {
-		return error('Failed to set custom icon.')
+	$if windows {
+		if !C.set_icon_win32(w.get_window(), wchar.from_string(icon_file_path)) {
+			return error('Failed to set custom icon.')
+		}
+	} $else {
+		if !C.set_icon_linux(w.get_window(), &char(icon_file_path.str)) {
+			return error('Failed to set custom icon.')
+		}
 	}
 }
 

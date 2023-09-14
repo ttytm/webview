@@ -5,7 +5,7 @@
 #include <windows.h>
 #include <tchar.h>
 BOOL set_icon_win32(const void *ptr, const wchar_t *iconFilePath);
-#else
+#elif __linux__
 #include <gtk/gtk.h>
 #include <stdbool.h>
 bool set_icon_linux(const void *ptr, const char *iconFilePath);

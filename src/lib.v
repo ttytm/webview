@@ -12,6 +12,7 @@ Source webview C library: https://github.com/webview/webview
 module webview
 
 import json
+import builtin.wchar
 
 pub type Webview = C.webview_t
 
@@ -59,6 +60,7 @@ pub const no_result = unsafe { nil }
 // Depending on the platform, a GtkWindow, NSWindow or HWND pointer can be passed here.
 // Returns null on failure. Creation can fail for various reasons such as when required runtime
 // dependencies are missing or when window creation fails.
+
 pub fn create(opts CreateOptions) &Webview {
 	return C.webview_create(int(opts.debug), opts.window)
 }
@@ -101,6 +103,23 @@ pub fn (w &Webview) dispatch_ctx(func fn (ctx voidptr), ctx voidptr) {
 // a NSWindow pointer, when using a Win32 backend the pointer is a HWND pointer.
 pub fn (w &Webview) get_window() voidptr {
 	return C.webview_get_window(w)
+}
+
+// set_icon updates the icon for the native window. It supports Windows HWND and Linux GTK windows
+// under X11 - Under Wayland, window application mapping is based on the desktop file entry name.
+// TODO: add macOS support
+pub fn (w &Webview) set_icon(icon_file_path string) ! {
+	$if windows {
+		if !C.set_icon_win32(w.get_window(), wchar.from_string(icon_file_path)) {
+			return error('Failed to set icon.')
+		}
+	} $else $if linux {
+		if !C.set_icon_linux(w.get_window(), &char(icon_file_path.str)) {
+			return error('Failed to set icon.')
+		}
+	} $else {
+		return error('Failed to set icon. Unsupported OS.')
+	}
 }
 
 // set_title updates the title of the native window. Must be called from the UI thread.

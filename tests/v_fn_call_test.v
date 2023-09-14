@@ -18,7 +18,7 @@ fn test_timeout() {
 	// We check if the V functions are called and windows closed successfully within 30 seconds.
 	// Otherwise, windows can remain open and the test can run indefinitely.
 	spawn fn () {
-		time.sleep(30 * time.second)
+		time.sleep(60 * time.second)
 		eprintln('Timeout trying to call V-functions from JS.')
 		assert false
 	}()

@@ -4,6 +4,8 @@ This example integrates the [`v-js-interop-app`](https://github.com/ttytm/webvie
 into a project structure that can be used as a starting guide for more complex Webview projects.
 
 ```
+├── assets/
+│   └── icon.ico
 ├── src/
 │   ├── api.v
 │   ├── main.v

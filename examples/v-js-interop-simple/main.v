@@ -17,10 +17,10 @@ const doc = '<!DOCTYPE html>
 			function myJsFunction(myArg) {
 				console.log("Called myJsFunction:", myArg);
 			};
-			// Calls a V function that in turn calls the above JS function
+			// Calls a V function that in turn calls the above JS function.
 			window.interop();
 
-			// Calls a V function that returns a Value
+			// Calls a V function that returns a Value.
 			(async () => {
 				num = await window.double(2);
 				console.log(num);
@@ -36,7 +36,7 @@ fn interop(e &webview.Event) voidptr {
 	return webview.no_result
 }
 
-// Returns a value to JS
+// Returns a value to JS.
 fn double(e &webview.Event) int {
 	return e.int(0) * 2
 }

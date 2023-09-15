@@ -60,7 +60,6 @@ pub const no_result = unsafe { nil }
 // Depending on the platform, a GtkWindow, NSWindow or HWND pointer can be passed here.
 // Returns null on failure. Creation can fail for various reasons such as when required runtime
 // dependencies are missing or when window creation fails.
-
 pub fn create(opts CreateOptions) &Webview {
 	return C.webview_create(int(opts.debug), opts.window)
 }
@@ -105,8 +104,8 @@ pub fn (w &Webview) get_window() voidptr {
 	return C.webview_get_window(w)
 }
 
-// set_icon updates the icon for the native window. It supports Windows HWND and Linux GTK windows
-// under X11 - Under Wayland, window application mapping is based on the desktop file entry name.
+// set_icon updates the icon of the native window. It supports Windows HWND windows and Linux GTK
+// windows under X11 - under Wayland, window application mapping is based on the desktop file entry name.
 // TODO: add macOS support
 pub fn (w &Webview) set_icon(icon_file_path string) ! {
 	$if windows {

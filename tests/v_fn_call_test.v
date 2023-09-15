@@ -15,7 +15,7 @@ fn gen_html(test_name string, script string) string {
 }
 
 fn test_timeout() {
-	// We check if the V functions are called and windows closed successfully within 30 seconds.
+	// We check if the V functions are called and windows closed successfully within 60 seconds.
 	// Otherwise, windows can remain open and the test can run indefinitely.
 	spawn fn () {
 		time.sleep(60 * time.second)

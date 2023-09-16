@@ -74,25 +74,25 @@ import webview // For installations from source
 
 const html = '<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<style>
-			body {
-				background: linear-gradient(to right, #274060, #1B2845);
-				color: GhostWhite;
-				font-family: sans-serif;
-				text-align: center;
-			}
-		</style>
-	</head>
-	<body>
-		<h1>Your App Content!</h1>
-		<button onclick="callV()">Call V!</button>
-	</body>
-	<script>
-		async function callV() {
-			console.log(await window.my_v_func(\'Hello from JS!\'));
-		}
-	</script>
+  <head>
+    <style>
+      body {
+        background: linear-gradient(to right, #274060, #1B2845);
+        color: GhostWhite;
+        font-family: sans-serif;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Your App Content!</h1>
+    <button onclick="callV()">Call V!</button>
+  </body>
+  <script>
+    async function callV() {
+      console.log(await window.my_v_func(\'Hello from JS!\'));
+    }
+  </script>
 </html>'
 
 fn my_v_func(e &webview.Event) string {

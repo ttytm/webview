@@ -12,7 +12,7 @@ Source webview C library: https://github.com/webview/webview
 module webview
 
 import json
-import builtin.wchar
+import icon
 
 pub type Webview = C.webview_t
 
@@ -108,17 +108,7 @@ pub fn (w &Webview) get_window() voidptr {
 // windows under X11 - under Wayland, window application mapping is based on the desktop file entry name.
 // TODO: add macOS support
 pub fn (w &Webview) set_icon(icon_file_path string) ! {
-	$if windows {
-		if !C.set_icon_win32(w.get_window(), wchar.from_string(icon_file_path)) {
-			return error('Failed to set icon.')
-		}
-	} $else $if linux {
-		if !C.set_icon_linux(w.get_window(), &char(icon_file_path.str)) {
-			return error('Failed to set icon.')
-		}
-	} $else {
-		return error('Failed to set icon. Unsupported OS.')
-	}
+	return icon.set_icon(w.get_window(), icon_file_path)
 }
 
 // set_title updates the title of the native window. Must be called from the UI thread.
@@ -187,31 +177,6 @@ pub fn (w &Webview) bind_ctx[T](name string, func fn (e &Event, ctx voidptr) T, 
 // unbind removes a native C callback that was previously set by webview_bind.
 pub fn (w &Webview) unbind(name string) {
 	C.webview_unbind(w, &char(name.str))
-}
-
-// @return allows to return a value from the native binding. A request id pointer must
-// be provided to allow the internal RPC engine to match the request and response.
-// If the status is zero - the result is expected to be a valid JSON value.
-// If the status is not zero - the result is an error JSON object.
-fn (e &Event) @return[T](result T, return_params ReturnParams) {
-	$if result is voidptr {
-		C.webview_return(e.instance, e.event_id, 0, &char(''.str))
-	} $else {
-		C.webview_return(e.instance, e.event_id, 0, &char(json.encode(result).str))
-	}
-}
-
-// async should be used if you want to return a JS result form another thread.
-// Without calling `async()`, the events id can get corrupted during garbage collection
-// and using it in a `@return` would not return data to the calling JS function.
-// Example:
-// ```v
-// fn my_async_func(event &Event) {
-// 	spawn fetch_data(event.async())
-// }
-// ```
-fn (e &Event) async() &Event {
-	return &Event{e.instance, copy_char(e.event_id), copy_char(e.args)}
 }
 
 // dispatch posts a function to be executed on the main thread. You normally do

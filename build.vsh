@@ -78,8 +78,8 @@ fn download(silent bool) {
 }
 
 fn build(silent bool) {
-	mut cmd := 'g++ -c ${lib_dir}/webview.cc -o ${lib_dir}/webview.o'
-	cmd += $if darwin && amd64 { ' -std=c++11' } $else { ' -std=c++17' }
+	mut cmd := 'g++ -c ${lib_dir}/webview.cc -DWEBVIEW_STATIC -o ${lib_dir}/webview.o'
+	cmd += $if darwin { ' -std=c++11' } $else { ' -std=c++17' }
 	$if linux {
 		cmd += ' $(pkg-config --cflags gtk+-3.0 webkit2gtk-4.0)'
 	} $else $if windows {

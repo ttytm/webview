@@ -45,9 +45,12 @@ fn main() {
 	w := webview.create(debug: true)
 
 	w.set_title('V webview Example')
+	w.set_size(800, 600, .@none)
+	w.set_html(doc)
+
+	// Bind V callbacks to appear as global javascript functions.
 	w.bind('double', double)
 	w.bind('interop', interop)
-	w.set_html(doc)
 
 	// Calls JS.
 	w.eval("console.log('Hello from V!');")

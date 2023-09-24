@@ -70,8 +70,10 @@ fn main() {
 	w.set_title('V webview examples')
 	w.set_size(800, 600, .@none)
 	$if !macos {
-		w.set_icon('${@VMODROOT}/assets/icon.ico')!
+		w.set_icon('${@VMODROOT}/icon.ico')!
 	}
+
+	// Bind V callbacks to appear as global javascript functions.
 	// The first string argument is the functions name in the JS frontend.
 	// Use JS's `camelCase` convention or distinct identifiers if you prefer it.
 	w.bind('get_settings', app.get_settings)
@@ -80,6 +82,7 @@ fn main() {
 	w.bind('fetch_news', fetch_news)
 
 	w.navigate('file://${@VMODROOT}/index.html')
+
 	w.run()
 	w.destroy()
 }

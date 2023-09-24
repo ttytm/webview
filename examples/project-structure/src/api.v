@@ -1,5 +1,6 @@
 import webview { Event, Webview }
 
+// Bind V callbacks to appear as global javascript functions.
 fn (mut app App) bind(w &Webview) {
 	// The first string arg names the functions for JS usage. E.g. use JS's `camelCase` convention if you prefer it.
 	w.bind('get_settings', app.get_settings)

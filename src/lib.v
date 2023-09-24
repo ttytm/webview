@@ -14,11 +14,13 @@ module webview
 import json
 import icon
 
+// Webview is a pointer to a webview instance.
 pub type Webview = C.webview_t
 
+// An Event which a V function receives that is called by javascript.
 pub struct Event {
 pub:
-	instance &Webview // Pointer to the webview instance
+	instance &Webview // Pointer to the events webview instance.
 	event_id &char
 	args     &char
 }
@@ -39,15 +41,15 @@ pub enum ReturnKind {
 	error
 }
 
-// Window size hints
+// A Hint that is passed to the Webview 'set_size' method to determine the window sizing behavior.
 pub enum Hint {
-	// Width and height are default size
+	// Width and height are default size.
 	@none = C.WEBVIEW_HINT_NONE
-	// Window size can not be changed by a user
+	// Window size can not be changed by a user.
 	fixed = C.WEBVIEW_HINT_FIXED
-	// Width and height are minimum bounds
+	// Width and height are minimum bounds.
 	min   = C.WEBVIEW_HINT_MIN
-	// Width and height are maximum bounds
+	// Width and height are maximum bounds.
 	max   = C.WEBVIEW_HINT_MAX
 }
 

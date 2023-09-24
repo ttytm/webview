@@ -69,9 +69,7 @@ fn main() {
 	w := webview.create(debug: true)
 	w.set_title('V webview examples')
 	w.set_size(800, 600, .@none)
-	$if !macos {
-		w.set_icon('${@VMODROOT}/icon.ico')!
-	}
+	w.set_icon('${@VMODROOT}/icon.ico')!
 
 	// Bind V callbacks to appear as global javascript functions.
 	// The first string argument is the functions name in the JS frontend.

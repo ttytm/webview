@@ -3,7 +3,7 @@ module webview
 import json
 
 // copy_char copies a C style string. The functions main use case is passing an `event_id &char`
-// to another thread. It helps to keep the event id available when executing `@retrun`
+// to another thread. It helps to keep the event id available when executing `@return`
 // from the spawned thread. Without copying the `event_id` might get obscured during garbage
 // collection and returning data to a calling JS function becomes error prone.
 fn copy_char(s &char) &char {

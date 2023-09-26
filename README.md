@@ -9,29 +9,34 @@ purpose programming language with modern web technologies to design a graphical 
 
 ## Installation
 
-Prerequisites
+**Build Tools and WebKit**
 
-- V
-
-  [Installing V from source](https://github.com/vlang/v#installing-v-from-source)
-
-- WebKit
-
-  E.g., on a debian based Linux destribution
+- Linux - Example for debian based destributions
 
   ```sh
+  # Build tools, such as a C compiler
+  sudo apt install build-essential
+  # WebKit
   sudo apt install libgtk-3-dev libwebkit2gtk-4.0-dev
   ```
 
-  On macOS you should be good to go with developer tools installed
+- macOS
 
   ```sh
   xcode-select --install
   ```
 
-Install the repository as V module
+- Windows
 
-- From source
+  E.g., https://www.msys2.org/ provides instructions to install MinGW
+
+**V**
+
+- [Installing V from source](https://github.com/vlang/v#installing-v-from-source)
+
+**V webview module**
+
+- Install it from source
 
   ```sh
   v install --git https://github.com/ttytm/webview
@@ -53,8 +58,8 @@ You can re-run the script at any point to rebuild the library with the latest up
 ~/.vmodules/webview/build.vsh
 # For installations as vpm module
 ~/.vmodules/ttytm/webview/build.vsh
-# PowerShell might require to prefix the script with `v run`, e.g.:
-v run $HOME/.vmodules/webview/build.vsh
+# PowerShell might require to prefix the script with `v`, e.g.:
+v $HOME/.vmodules/webview/build.vsh
 ```
 
 ### Usage Example

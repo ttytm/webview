@@ -9,6 +9,7 @@ import regex
 const (
 	lib_url = 'https://raw.githubusercontent.com/webview/webview/master'
 	lib_dir = '${@VMODROOT}/src'
+	cxx     = get_cxx() or { panic(err) }
 )
 
 // == Docs ====================================================================
@@ -77,8 +78,20 @@ fn download(silent bool) {
 	dl_spinner <- true
 }
 
+fn get_cxx() !string {
+	mut res := os.execute('g++ --version')
+	if res.exit_code == 0 {
+		return 'g++'
+	}
+	res = os.execute('clang++ --version')
+	if res.exit_code == 0 {
+		return 'clang++'
+	}
+	return error("Can't find C++ compiler. Make sure g++ or clang++ is executable.")
+}
+
 fn build(silent bool) {
-	mut cmd := 'g++ -c ${lib_dir}/webview.cc -DWEBVIEW_STATIC -o ${lib_dir}/webview.o'
+	mut cmd := '${cxx} -c ${lib_dir}/webview.cc -DWEBVIEW_STATIC -o ${lib_dir}/webview.o'
 	cmd += $if darwin { ' -std=c++11' } $else { ' -std=c++17' }
 	$if linux {
 		cmd += ' $(pkg-config --cflags gtk+-3.0 webkit2gtk-4.0)'

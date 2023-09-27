@@ -1,40 +1,31 @@
-# Binaries for programs and plugins
-main
-build
+# Binaries
+*
+!*/
+!*.*
 *.exe
 *.exe~
+*.a
 *.so
-*.dylib
+*.o
+*.obj
 *.dll
+*.so
+*.so.*
+*.dylib
 
-# Ignore binary output folders
-bin/
+# Webview library files
+webview.cc
+webview.h
 
-# Ignore common editor/system specific metadata
+# Common editor/system specific metadata
 .DS_Store
 .idea/
 .vscode/
 *.iml
 
-# ENV
+# Private files
 .env
-
-# vweb and database
 *.db
-
-# Webview library files
-webview.cc
-webview.h
-webview.o*
 
 # Generated docs
 _docs/
-build_docs
-
-# Example binaries
-emoji-picker
-!emoji-picker/
-v-js-interop
-!v-js-interop/
-project-structure
-!project-structure/

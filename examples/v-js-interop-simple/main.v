@@ -38,7 +38,10 @@ fn interop(e &webview.Event) voidptr {
 
 // Returns a value to JS.
 fn double(e &webview.Event) int {
-	return e.int(0) * 2
+	return e.get_arg[int](0) or {
+		eprintln(err)
+		return 0
+	} * 2
 }
 
 fn main() {

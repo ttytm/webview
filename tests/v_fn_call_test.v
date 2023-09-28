@@ -26,6 +26,7 @@ fn test_timeout() {
 
 fn test_fn_call() {
 	w := webview.create(debug: true)
+	w.set_size(600, 400, .@none)
 	// V function, called from JS, receiving a string argument.
 	w.bind('v_fn', fn [w] (e &webview.Event) voidptr {
 		assert true
@@ -40,65 +41,73 @@ fn test_fn_call() {
 	w.run()
 }
 
-fn test_fn_call_with_js_return() {
+fn test_get_js_arg() {
 	w := webview.create(debug: true)
+	w.set_size(600, 400, .@none)
 	// V function, called from JS, receiving a string argument.
-	w.bind('v_fn', fn (e &webview.Event) string {
-		assert e.string(0) == 'foo'
-		return 'bar'
-	})
-	// V function, called from JS, receiving the above return value as argument and asserts it's correctness.
-	w.bind[voidptr]('assert_js_res_from_v', fn [w] (e &webview.Event) {
-		assert e.string(0) == 'bar'
+	w.bind[voidptr]('v_fn', fn [w] (e &webview.Event) {
+		assert e.get_arg[string](0) or { '' } == 'foo'
+		assert e.get_arg[int](1) or { 0 } == 123
+		assert e.get_arg[bool](2) or { false } == true
+		assert e.get_arg[Person](3) or { Person{} } == Person{'Bob', 30}
+		// assert e.get_arg[[]int](4) or { [0] } == [1, 2, 3]
+		// assert e.get_arg[[]int](-1) or { [0] } == [1, 2, 3]
+		assert e.get_arg[Person](-2) or { Person{} } == Person{'Bob', 30}
+		assert e.get_arg[bool](-3) or { false } == true
+		assert e.get_arg[int](-4) or { 0 } == 123
+		assert e.get_arg[string](-5) or { '' } == 'foo'
 		w.terminate()
 	})
 	script := '
 	setTimeout(async () => {
-		const res = await window.v_fn("foo");
-		await window.assert_js_res_from_v(res);
+		const person = {
+			name: "Bob",
+			age: 30
+		}
+		await window.v_fn("foo", 123, true, JSON.stringify(person), [1, 2, 3]);
 	}, 500)'
 	w.set_html(gen_html(@FN, script))
 	w.run()
 }
 
-fn test_fn_call_with_obj_arg() {
+fn test_return_value_to_js() {
 	w := webview.create(debug: true)
-	// V function, called from the JS, receiving an Obj argument as JSON string.
-	w.bind('v_fn_with_obj_arg', fn (e &webview.Event) Person {
-		mut p := e.decode[Person](0) or {
-			eprintln(err)
-			assert false
-			exit(0)
-		}
-		println(p)
-		assert p.name == 'Bob'
-		assert p.age == 30
-		// Let's celebrate Bob's birthday.
-		p.age += 1
-		return p
+	w.set_size(600, 400, .@none)
+	// Eventually possible with lambda expressions like below. Re-check as V development progresses.
+	// w.bind('return_string', |_| 'bar')
+	w.bind('v_return_string', fn (e &webview.Event) string {
+		return 'bar'
+	})
+	w.bind('v_return_int', fn (e &webview.Event) int {
+		return 123
+	})
+	w.bind('v_return_bool', fn (e &webview.Event) bool {
+		return true
+	})
+	w.bind('v_return_struct', fn (e &webview.Event) Person {
+		return Person{'Bob', 30}
+	})
+	w.bind('v_return_array', fn (e &webview.Event) []int {
+		return [1, 2, 3]
 	})
 	// V function, called from JS, receiving the above return value as argument and asserts it's correctness.
-	w.bind[voidptr]('assert_v_to_js_res', fn [w] (e &webview.Event) {
-		p := e.decode[Person](0) or {
-			eprintln(err)
-			assert false
-			exit(0)
-		}
-		println(p)
-		assert p.name == 'Bob'
-		assert p.age == 31
+	w.bind[voidptr]('assert_js_res_from_v', fn [w] (e &webview.Event) {
+		assert e.get_arg[string](0) or { '' } == 'bar'
+		assert e.get_arg[int](1) or { 0 } == 123
+		assert e.get_arg[bool](2) or { false } == true
+		assert e.get_arg[Person](3) or { Person{} } == Person{'Bob', 30}
+		// assert e.get_arg[[]int](4) or { [0] } == [1, 2, 3]
 		w.terminate()
 	})
 	script := '
-	const person = {
-		name: "Bob",
-		age: 30
-	}
 	setTimeout(async () => {
-		const res = await window.v_fn_with_obj_arg(JSON.stringify(person));
-		console.log("res:", res, "| res string:", JSON.stringify(res));
-		await window.assert_v_to_js_res(JSON.stringify(res));
-	}, 1000)'
+		const str = await window.v_return_string(),
+			int = await window.v_return_int(),
+			bool = await window.v_return_bool(),
+			struct = await window.v_return_struct(),
+			array = await window.v_return_array();
+		await window.assert_js_res_from_v(str, int, bool, JSON.stringify(struct), array);
+	}, 500)'
 	w.set_html(gen_html(@FN, script))
 	w.run()
 }
@@ -111,8 +120,9 @@ fn expensive_computing(id int, duration int) int {
 	return id * 2
 }
 
-fn test_fn_call_with_js_return_from_threaded_task() {
+fn test_return_value_from_threaded_task_to_js() {
 	w := webview.create(debug: true)
+	w.set_size(600, 400, .@none)
 	// V function, called from JS, performs a threaded task and returns the value to JS
 	w.bind('v_fn_with_threads', fn (_ &webview.Event) []int {
 		mut threads := []thread int{}
@@ -125,7 +135,7 @@ fn test_fn_call_with_js_return_from_threaded_task() {
 	})
 	// V function, called from JS, receiving the above thread result return value as argument and asserts it's correctness.
 	w.bind[voidptr]('assert_v_to_js_thread_res', fn (e &webview.Event) {
-		res := e.decode[[]int](0) or {
+		res := e.get_arg[[]int](0) or {
 			eprintln(err)
 			assert false
 			exit(0)

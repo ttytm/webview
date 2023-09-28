@@ -35,6 +35,28 @@ fn (e &Event) async() &Event {
 	return &Event{e.instance, copy_char(e.event_id), copy_char(e.args)}
 }
 
+fn (e &Event) get_args_json[T](idx int) !T {
+	args := json.decode([]T, unsafe { e.args.vstring() }) or {
+		return error('Failed decoding argument of type `${T.name}` at index `${idx}`. ${err}')
+	}
+	i := if idx < 0 { args.len + idx } else { idx }
+	return args[i] or {
+		return error('Failed finding argument of type `${T.name}` at index `${idx}`.')
+	}
+}
+
+// FIXME: JS arg of type array at index != 0
+fn (e &Event) get_complex_args_json[T](idx int) !T {
+	raw_args := json.decode([]string, unsafe { e.args.vstring() }) or {
+		return error('Failed decoding argument of type `${T.name}` at index `${idx}`. ${err}')
+	}
+	i := if idx < 0 { raw_args.len + idx } else { idx }
+	return json.decode(T, raw_args[i] or {
+		return error('Failed finding argument of type `${T.name}` at index `${idx}`')
+	}) or { return error('Failed decoding argument of type `${T.name}` at index `${idx}`. ${err}') }
+}
+
+[deprecated]
 fn (e &Event) args_json[T]() ![]T {
 	return json.decode([]T, unsafe { e.args.vstring() })!
 }

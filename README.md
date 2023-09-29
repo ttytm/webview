@@ -103,7 +103,7 @@ const html = '<!DOCTYPE html>
 fn my_v_func(e &webview.Event) string {
 	println('Hello from V from V!')
 	e.eval("console.log('Hello from V from JS!');")
-	str_arg := e.string(0) // Get string arg at index `0`
+	str_arg := e.get_arg[string](0) or { '' } // Get string arg at index `0`
 	return str_arg + ' Hello back from V!'
 }
 

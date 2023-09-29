@@ -35,7 +35,10 @@ fn toggle(_ &Event, mut app App) bool {
 
 // Handles received arguments.
 fn login(e &Event) string {
-	name := e.string(0)
+	name := e.get_arg[string](0) or {
+		eprintln(err)
+		return ''
+	}
 	println('Hello ${name}!')
 	return 'Data received: Check your terminal.'
 }

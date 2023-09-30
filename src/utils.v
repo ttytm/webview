@@ -45,7 +45,6 @@ fn (e &Event) get_args_json[T](idx int) !T {
 	}
 }
 
-// FIXME: JS arg of type array at index != 0
 fn (e &Event) get_complex_args_json[T](idx int) !T {
 	raw_args := json.decode([]string, unsafe { e.args.vstring() }) or {
 		return error('Failed decoding argument of type `${T.name}` at index `${idx}`. ${err}')

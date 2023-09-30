@@ -48,8 +48,8 @@ fn test_get_js_arg() {
 		assert e.get_arg[int](1) or { 0 } == 123
 		assert e.get_arg[bool](2) or { false } == true
 		assert e.get_arg[Person](3) or { Person{} } == Person{'Bob', 30}
-		// assert e.get_arg[[]int](4) or { [0] } == [1, 2, 3]
-		// assert e.get_arg[[]int](-1) or { [0] } == [1, 2, 3]
+		assert e.get_arg[[]int](4) or { [0] } == [1, 2, 3]
+		assert e.get_arg[[]int](-1) or { [0] } == [1, 2, 3]
 		assert e.get_arg[Person](-2) or { Person{} } == Person{'Bob', 30}
 		assert e.get_arg[bool](-3) or { false } == true
 		assert e.get_arg[int](-4) or { 0 } == 123
@@ -62,7 +62,7 @@ fn test_get_js_arg() {
 			name: "Bob",
 			age: 30
 		}
-		await window.v_fn("foo", 123, true, JSON.stringify(person), [1, 2, 3]);
+		await window.v_fn("foo", 123, true, JSON.stringify(person), JSON.stringify([1, 2, 3]));
 	}, 500)'
 	w.set_html(gen_html(@FN, script))
 	w.run()

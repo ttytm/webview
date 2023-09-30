@@ -27,7 +27,6 @@ fn test_timeout() {
 fn test_fn_call() {
 	w := webview.create(debug: true)
 	w.set_size(600, 400, .@none)
-	// V function, called from JS, receiving a string argument.
 	w.bind('v_fn', fn [w] (e &webview.Event) voidptr {
 		assert true
 		w.terminate()
@@ -35,7 +34,7 @@ fn test_fn_call() {
 	})
 	script := '
 	setTimeout(async () => {
-		await window.v_fn("foo");
+		await window.v_fn();
 	}, 500)'
 	w.set_html(gen_html(@FN, script))
 	w.run()
@@ -44,7 +43,6 @@ fn test_fn_call() {
 fn test_get_js_arg() {
 	w := webview.create(debug: true)
 	w.set_size(600, 400, .@none)
-	// V function, called from JS, receiving a string argument.
 	w.bind[voidptr]('v_fn', fn [w] (e &webview.Event) {
 		assert e.get_arg[string](0) or { '' } == 'foo'
 		assert e.get_arg[int](1) or { 0 } == 123

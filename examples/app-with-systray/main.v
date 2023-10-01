@@ -8,11 +8,6 @@ enum MenuItems {
 	quit = 2
 }
 
-struct Tray {
-	pub mut:
-	tray vtray.VTrayApp
-}
-
 fn main() {
 	mut systray := &vtray.VTrayApp{
 		identifier: 'VTray!'

@@ -133,12 +133,7 @@ fn test_return_value_from_threaded_task_to_js() {
 	})
 	// V function, called from JS, receiving the above thread result return value as argument and asserts it's correctness.
 	w.bind[voidptr]('assert_v_to_js_thread_res', fn (e &webview.Event) {
-		res := e.get_arg[[]int](0) or {
-			eprintln(err)
-			assert false
-			exit(0)
-		}
-		assert res == [2, 4, 6]
+		assert e.get_arg[[]int](0) or { [0] } == [2, 4, 6]
 	})
 	// If reached, it closes the Window and ends the test successfully.
 	w.bind[voidptr]('exit', fn [w] (_ &webview.Event) {

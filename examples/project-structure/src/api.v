@@ -1,8 +1,9 @@
 import webview { Event, Webview }
 
-// Bind V callbacks to appear as global javascript functions.
+// Bind V callbacks to global javascript functions.
 fn (mut app App) bind(w &Webview) {
-	// The first string arg names the functions for JS usage. E.g. use JS's `camelCase` convention if you prefer it.
+	// The first string argument is the functions name in the JS frontend.
+	// Use JS's `camelCase` convention or distinct identifiers if you prefer it.
 	w.bind('get_settings', app.get_settings)
 	w.bind_ctx('toggle_setting', toggle, app) // Alternatively use the ctx ptr to pass a struct.
 	w.bind('login', login)
@@ -10,13 +11,13 @@ fn (mut app App) bind(w &Webview) {
 }
 
 // Returns a value when it's called from JS.
-// This examples uses an `App` method, leaving the data ptr available for other potential uses.
+// This examples uses an `App` method.
 fn (app App) get_settings(_ &Event) Settings {
 	return app.settings
 }
 
 // Returns a value when it's called from JS.
-// This examples uses the context argument to receive the app struct.
+// This examples uses bind_ctx, adding the App struct as context argument.
 fn toggle(_ &Event, mut app App) bool {
 	app.settings.toggle = !app.settings.toggle
 	dump(app.settings.toggle)

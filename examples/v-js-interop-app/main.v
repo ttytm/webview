@@ -20,13 +20,13 @@ struct Article {
 }
 
 // Returns a value when it's called from JS.
-// This examples uses an `App` method, leaving the data ptr available for other potential uses.
+// This examples uses an `App` method.
 fn (app App) get_settings(_ &Event) Settings {
 	return app.settings
 }
 
 // Returns a value when it's called from JS.
-// This examples uses the context argument to receive the app struct.
+// This examples uses bind_ctx, adding the App struct as context argument.
 fn toggle(_ &Event, mut app App) bool {
 	app.settings.toggle = !app.settings.toggle
 	dump(app.settings.toggle)
@@ -76,7 +76,7 @@ fn main() {
 		w.set_icon('${@VMODROOT}/icon.ico')!
 	}
 
-	// Bind V callbacks to appear as global javascript functions.
+	// Bind V callbacks to global javascript functions.
 	// The first string argument is the functions name in the JS frontend.
 	// Use JS's `camelCase` convention or distinct identifiers if you prefer it.
 	w.bind('get_settings', app.get_settings)

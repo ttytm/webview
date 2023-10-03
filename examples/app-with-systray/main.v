@@ -9,9 +9,9 @@ enum MenuItems {
 }
 
 fn main() {
-	icon := if macos {
+	icon := $if macos {
 		'${@VMODROOT}/assets/icon.png'
-	} else {
+	} $else {
 		'${@VMODROOT}/assets/icon.ico'
 	}
 	mut systray := &vtray.VTrayApp{

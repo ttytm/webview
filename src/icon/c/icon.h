@@ -1,8 +1,9 @@
 #pragma once
 
 #ifdef _WIN32
-#include "wchar.h"
 #include <windows.h>
+#include <wchar.h>
+#include <stdlib.h>
 #elif __linux__
 #include <gtk/gtk.h>
 #endif
@@ -14,6 +15,4 @@ enum SetIconErrorCode {
    OS_UNSUPPORTED,
 };
 
-#ifndef __APPLE__
 enum SetIconErrorCode set_icon(const void *ptr, const char *iconFilePath);
-#endif

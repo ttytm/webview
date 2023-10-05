@@ -7,7 +7,7 @@
 #include <gtk/gtk.h>
 #endif
 
-enum SetIconResult {
+enum SetIconErrorCode {
    OK = 0,
    WINDOW_NOT_FOUND,
    ICON_NOT_FOUND,
@@ -15,5 +15,5 @@ enum SetIconResult {
 };
 
 #ifndef __APPLE__
-enum SetIconResult set_icon(const void *ptr, const char *iconFilePath);
+enum SetIconErrorCode set_icon(const void *ptr, const char *iconFilePath);
 #endif

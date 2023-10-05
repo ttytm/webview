@@ -1,6 +1,6 @@
 #include "icon.h"
 
-enum SetIconResult set_icon(const void *ptr, const char *iconFilePath) {
+enum SetIconErrorCode set_icon(const void *ptr, const char *iconFilePath) {
 
 #ifdef _WIN32
 

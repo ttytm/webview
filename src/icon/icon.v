@@ -1,12 +1,13 @@
 module icon
 
+#flag -I@VMODROOT/src/icon/c
+#flag @VMODROOT/src/icon/c/icon.o
+#include "@VMODROOT/src/icon/c/icon.h"
+
 $if linux {
 	#pkgconfig gtk+-3.0
 	#pkgconfig webkit2gtk-4.0
 }
-#flag -I@VMODROOT/src/icon/c
-#flag @VMODROOT/src/icon/c/icon.o
-#include "@VMODROOT/src/icon/c/icon.h"
 
 enum SetIconResult {
 	ok               = C.OK

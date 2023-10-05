@@ -18,9 +18,7 @@ fn main() {
 	app.bind(w)
 	w.set_title('V webview examples')
 	w.set_size(800, 600, .@none)
-	$if !macos {
-		w.set_icon('${@VMODROOT}/assets/icon.ico')!
-	}
+	w.set_icon('${@VMODROOT}/assets/icon.ico')!
 	w.navigate('file://${@VMODROOT}/ui/index.html')
 	w.run()
 	w.destroy()

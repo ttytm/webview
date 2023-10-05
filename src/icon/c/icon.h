@@ -1,12 +1,18 @@
 #pragma once
-#include <stdio.h>
 
 #ifdef _WIN32
-#include <tchar.h>
 #include <windows.h>
-BOOL set_icon_win32(const void *ptr, const wchar_t *iconFilePath);
+#include <wchar.h>
+#include <stdlib.h>
 #elif __linux__
 #include <gtk/gtk.h>
-#include <stdbool.h>
-bool set_icon_linux(const void *ptr, const char *iconFilePath);
 #endif
+
+enum SetIconErrorCode {
+   OK = 0,
+   WINDOW_NOT_FOUND,
+   ICON_NOT_FOUND,
+   OS_UNSUPPORTED,
+};
+
+enum SetIconErrorCode set_icon(const void *ptr, const char *iconFilePath);

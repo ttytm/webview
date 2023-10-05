@@ -4,17 +4,22 @@ enum SetIconResult set_icon(const void *ptr, const char *iconFilePath) {
 
 #ifdef _WIN32
 
-	HWND hwnd = ((const HWND *)ptr);
-	if (hwnd == NULL) {
+	HWND window = (HWND)ptr;
+	if (window == NULL) {
 		return WINDOW_NOT_FOUND;
 	}
-	HICON hIcon = LoadImageW(NULL, iconFilePath, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
+	size_t size = strlen(iconFilePath) + 1;
+	wchar_t* iconPath = malloc(size * sizeof(wchar_t));
+	mbstowcs(iconPath, iconFilePath, size);
+	HICON hIcon = LoadImageW(NULL, iconPath, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
 	if (hIcon == NULL) {
+		free(iconPath);
 		return ICON_NOT_FOUND;
 	}
 	// Set the application icon
-	SendMessageW(hwnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+	SendMessageW(window, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
 	// Cleanup
+	free(iconPath);
 	DestroyIcon(hIcon);
 	return OK;
 

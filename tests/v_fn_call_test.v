@@ -94,7 +94,7 @@ fn test_return_value_to_js() {
 		assert e.get_arg[int](1) or { 0 } == 123
 		assert e.get_arg[bool](2) or { false } == true
 		assert e.get_arg[Person](3) or { Person{} } == Person{'Bob', 30}
-		// assert e.get_arg[[]int](4) or { [0] } == [1, 2, 3]
+		assert e.get_arg[[]int](4) or { [0] } == [1, 2, 3]
 		w.terminate()
 	})
 	script := '
@@ -104,7 +104,7 @@ fn test_return_value_to_js() {
 			bool = await window.v_return_bool(),
 			struct = await window.v_return_struct(),
 			array = await window.v_return_array();
-		await window.assert_js_res_from_v(str, int, bool, JSON.stringify(struct), array);
+		await window.assert_js_res_from_v(str, int, bool, JSON.stringify(struct), JSON.stringify(array));
 	}, 500)'
 	w.set_html(gen_html(@FN, script))
 	w.run()

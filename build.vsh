@@ -14,19 +14,22 @@ const (
 
 // == Docs ====================================================================
 
+// Remove redundant readme section from module page.
 fn rm_readme_section(html string) string {
-	mut r := regex.regex_opt(r'<h1>webview - V Binding</h1>.*</section>') or { panic(err) }
+	mut r := regex.regex_opt(r'<section id="readme_webview".*</section>') or { panic(err) }
 	sec_start, sec_end := r.find(html)
 	return '${html[..sec_start]}</section>${html[sec_end..]}'
 		.replace('<li class="open"><a href="#readme_webview">README</a></li>', '')
 }
 
 fn build_docs() ! {
-	res := execute('v doc -readme -m -f html .')
-	if res.exit_code != 0 {
-		eprintln(res.output)
-		exit(1)
-	}
+	// Cleanup old docs.
+	rmdir_all('_docs') or {}
+	// Build docs.
+	mut p := new_process(@VEXE)
+	p.set_args(['doc', '-readme', '-m', '-f', 'html', '.'])
+	p.wait()
+	// Prepare html.
 	mut webview_html := read_file('_docs/webview.html')!
 	webview_html = rm_readme_section(webview_html)
 	write_file('_docs/webview.html', webview_html)!

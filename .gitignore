@@ -1,7 +1,4 @@
-# Binaries
-*
-!*/
-!*.*
+# Binaries by extension
 *.exe
 *.exe~
 *.a
@@ -12,6 +9,14 @@
 *.so
 *.so.*
 *.dylib
+
+# Project root binaries
+build
+
+# All sub-level build binaries
+*/**/*
+!*/**/*/
+!*/**/*.*
 
 # Webview library files
 webview.cc

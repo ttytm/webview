@@ -176,7 +176,7 @@ pub fn (w &Webview) bind_ctx[T](name string, func fn (e &Event, ctx voidptr) T, 
 		e := unsafe { &Event{w, event_id, args} }
 		spawn fn [func, ctx] [T](e &Event) {
 			result := func(e, ctx)
-			e.@return(result)
+			e.@return(result, .value)
 		}(e.async())
 	}, ctx)
 }
@@ -188,7 +188,7 @@ pub fn (w &Webview) bind_with_ctx[T](name string, func fn (e &Event, ctx voidptr
 		e := unsafe { &Event{w, event_id, args} }
 		spawn fn [func, ctx] [T](e &Event) {
 			result := func(e, ctx)
-			e.@return(result)
+			e.@return(result, .value)
 		}(e.async())
 	}, ctx)
 }

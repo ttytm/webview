@@ -1,5 +1,14 @@
-ColumnLimit: 100
+BasedOnStyle: LLVM
+ColumnLimit: 120
+UseTab: ForIndentation
 # Not actually 8, but makes clangd use tabs.
 # The indent width adapts to the configured tab width.
 IndentWidth: 8
-UseTab: Always
+IndentWrappedFunctionNames: true
+AccessModifierOffset: 0
+AlignAfterOpenBracket: BlockIndent
+PointerAlignment: Left
+AlignConsecutiveMacros:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: false

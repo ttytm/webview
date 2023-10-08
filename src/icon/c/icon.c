@@ -1,6 +1,6 @@
 #include "icon.h"
 
-enum SetIconErrorCode set_icon(const void *ptr, const char *iconFilePath) {
+enum SetIconErrorCode set_icon(const void* ptr, const char* iconFilePath) {
 
 #ifdef _WIN32
 
@@ -25,15 +25,15 @@ enum SetIconErrorCode set_icon(const void *ptr, const char *iconFilePath) {
 
 #elif __linux__
 
-	GtkWidget *window = (GtkWidget *)ptr;
+	GtkWidget* window = (GtkWidget*)ptr;
 	if (window == NULL) {
 		return WINDOW_NOT_FOUND;
 	}
-	GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(iconFilePath, NULL);
+	GdkPixbuf* pixbuf = gdk_pixbuf_new_from_file(iconFilePath, NULL);
 	if (pixbuf == NULL) {
 		return ICON_NOT_FOUND;
 	}
-	GtkWindow *gtkWindow = GTK_WINDOW(window);
+	GtkWindow* gtkWindow = GTK_WINDOW(window);
 	gtk_window_set_icon(GTK_WINDOW(gtkWindow), pixbuf);
 	g_object_unref(pixbuf);
 	return OK;

@@ -2,8 +2,13 @@ module webview
 
 import json
 
+enum ReturnKind {
+	value
+	error
+}
+
 // copy_char copies a C style string. The functions main use case is passing an `event_id &char`
-// to another thread. It helps to keep the event id available when executing `@return`
+// to another thread. It helps to keep the event id available when executing `@retrun`
 // from the spawned thread. Without copying the `event_id` might get obscured during garbage
 // collection and returning data to a calling JS function becomes error prone.
 fn copy_char(s &char) &char {
@@ -14,11 +19,11 @@ fn copy_char(s &char) &char {
 // be provided to allow the internal RPC engine to match the request and response.
 // If the status is zero - the result is expected to be a valid JSON value.
 // If the status is not zero - the result is an error JSON object.
-fn (e &Event) @return[T](result T, return_params ReturnParams) {
+fn (e &Event) @return[T](result T, kind ReturnKind) {
 	$if result is voidptr {
-		C.webview_return(e.instance, e.event_id, 0, &char(''.str))
+		C.webview_return(e.instance, e.event_id, int(kind), &char(''.str))
 	} $else {
-		C.webview_return(e.instance, e.event_id, 0, &char(json.encode(result).str))
+		C.webview_return(e.instance, e.event_id, int(kind), &char(json.encode(result).str))
 	}
 }
 

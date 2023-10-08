@@ -31,16 +31,6 @@ pub struct CreateOptions {
 	window voidptr
 }
 
-[params]
-pub struct ReturnParams {
-	kind ReturnKind
-}
-
-pub enum ReturnKind {
-	value
-	error
-}
-
 // A Hint that is passed to the Webview 'set_size' method to determine the window sizing behavior.
 pub enum Hint {
 	// Width and height are default size.
@@ -150,28 +140,71 @@ pub fn (w &Webview) eval(code string) {
 	C.webview_eval(w, &char(code.str))
 }
 
-// bind binds a callback so that it will appear under the given name as a
-// global JavaScript function. Internally it uses webview_init().
-// The callback receives an `&Event` pointer.
+// bind binds a V callback to a global JavaScript function that will appear under the given name.
+// The callback receives an `&Event` argument. Internally it uses webview_init().
 pub fn (w &Webview) bind[T](name string, func fn (&Event) T) {
 	C.webview_bind(w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
 		e := unsafe { &Event{w, event_id, args} }
 		spawn fn [func] [T](e &Event) {
 			result := func(e)
-			e.@return(result)
+			e.@return(result, .value)
 		}(e.async())
 	}, 0)
 }
 
-// bind_ctx binds a callback so that it will appear under the given name as a
-// global JavaScript function. Internally it uses webview_init().
-// The callback receives an `7Event` pointer and a user-provided ctx pointer.
+// bind_opt binds a V callback with a result return type to a global JavaScript function that will
+// appear under the given name. The callback receives an `&Event` argument. The callback can return an
+// error to the calling JavaScript function. Internally it uses webview_init().
+pub fn (w &Webview) bind_opt[T](name string, func fn (&Event) !T) {
+	C.webview_bind(w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
+		e := unsafe { &Event{w, event_id, args} }
+		spawn fn [func] [T](e &Event) {
+			if result := func(e) {
+				e.@return(result, .value)
+			} else {
+				e.@return(err.str(), .error)
+			}
+		}(e.async())
+	}, 0)
+}
+
+// bind_ctx binds a V callback to a global JavaScript function that will appear under the given name.
+// The callback receives an `&Event` and a user-provided ctx pointer argument.
+[deprecated: 'will be removed with v0.7; use `bind_with_ctx` instead.']
 pub fn (w &Webview) bind_ctx[T](name string, func fn (e &Event, ctx voidptr) T, ctx voidptr) {
 	C.webview_bind(w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
 		e := unsafe { &Event{w, event_id, args} }
 		spawn fn [func, ctx] [T](e &Event) {
 			result := func(e, ctx)
 			e.@return(result)
+		}(e.async())
+	}, ctx)
+}
+
+// bind_with_ctx binds a V callback to a global JavaScript function that will appear under the given name.
+// The callback receives an `&Event` and a user-provided ctx pointer argument.
+pub fn (w &Webview) bind_with_ctx[T](name string, func fn (e &Event, ctx voidptr) T, ctx voidptr) {
+	C.webview_bind(w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
+		e := unsafe { &Event{w, event_id, args} }
+		spawn fn [func, ctx] [T](e &Event) {
+			result := func(e, ctx)
+			e.@return(result)
+		}(e.async())
+	}, ctx)
+}
+
+// bind_opt_with_ctx binds a V callback with a result return type to a global JavaScript function that will
+// appear under the given name. The callback receives an `&Event` and a user-provided ctx pointer argument.
+// The callback can return an error to the calling JavaScript function. Internally it uses webview_init().
+pub fn (w &Webview) bind_opt_with_ctx[T](name string, func fn (e &Event, ctx voidptr) T, ctx voidptr) {
+	C.webview_bind(w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
+		e := unsafe { &Event{w, event_id, args} }
+		spawn fn [func, ctx] [T](e &Event) {
+			if result := func(e, ctx) {
+				e.@return(result, .value)
+			} else {
+				e.@return(err, .error)
+			}
 		}(e.async())
 	}, ctx)
 }
@@ -250,7 +283,7 @@ pub fn (e &Event) int_opt(idx usize) ?int {
 	return e.args_json[int]() or { return none }[int(idx)] or { return none }
 }
 
-// bool_opt decodes and return the argument with the given index as boolean option.
+// bool_opt parses and return the argument with the given index as boolean option.
 [deprecated: 'will be removed with v0.7; use `get_arg[T](idx int) !T` instead. E.g: `e.get_arg[bool](0)!`']
 pub fn (e &Event) bool_opt(idx usize) ?bool {
 	return e.args_json[bool]() or { return none }[int(idx)] or { return none }

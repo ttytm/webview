@@ -1,5 +1,6 @@
 import webview
 import time
+import os
 
 struct Person {
 	name string
@@ -146,6 +147,44 @@ fn test_return_value_from_threaded_task_to_js() {
 		await window.assert_v_to_js_thread_res(JSON.stringify(res));
 		await window.exit();
 	}, 1000) '
+	w.set_html(gen_html(@FN, script))
+	w.run()
+}
+
+fn test_fn_call_with_error() {
+	w := webview.create(debug: true)
+	w.set_size(600, 400, .@none)
+	w.bind_opt('v_fn_with_custom_error', fn (e &webview.Event) !int {
+		return error('my error')
+	})
+	w.bind[voidptr]('assert_custom_error', fn (e &webview.Event) {
+		assert e.get_arg[string](0) or { '' } == 'my error'
+	})
+	w.bind_opt('v_fn_with_error_propagation', fn (e &webview.Event) !string {
+		return os.existing_path('my_inexistent_path/file.v')!
+	})
+	w.bind[voidptr]('assert_error_propagation', fn (e &webview.Event) {
+		assert e.get_arg[string](0) or { '' } == 'path does not exist'
+	})
+	w.bind[voidptr]('exit', fn [w] (_ &webview.Event) {
+		w.terminate()
+	})
+	script := '
+	setTimeout(async () => {
+		try {
+			await window.v_fn_with_custom_error();
+		} catch (err) {
+			console.log(err);
+			await window.assert_custom_error(err);
+		}
+		try {
+			await window.v_fn_with_error_propagation();
+		} catch (err) {
+			console.log(err);
+			await window.assert_error_propagation(err);
+			await window.exit();
+		}
+	}, 500)'
 	w.set_html(gen_html(@FN, script))
 	w.run()
 }

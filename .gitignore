@@ -10,7 +10,7 @@
 *.so.*
 *.dylib
 
-# Project root binaries
+# Binaries in project root
 build
 
 # All sub-level build binaries

@@ -9,10 +9,16 @@ import regex
 const (
 	lib_url = 'https://raw.githubusercontent.com/webview/webview/master'
 	lib_dir = '${@VMODROOT}/src'
-	cxx     = get_cxx() or { panic(err) }
+	cxx     = if _ := find_abs_path_of_executable('g++') {
+		'g++'
+	} else if _ := find_abs_path_of_executable('clang++') {
+		'clang++'
+	} else {
+		panic("Can't find C++ compiler. Make sure g++ or clang++ is executable.")
+	}
 )
 
-// == Docs ====================================================================
+// == Build Docs ==============================================================
 
 // Remove redundant readme section from module page.
 fn rm_readme_section(html string) string {
@@ -35,7 +41,7 @@ fn build_docs() ! {
 	write_file('_docs/webview.html', webview_html)!
 }
 
-// == Libs ====================================================================
+// == Download & Build Library ================================================
 
 fn spinner(ch chan bool) {
 	runes := [`-`, `\\`, `|`, `/`]
@@ -79,18 +85,6 @@ fn download(silent bool) {
 	http.download_file('${lib_url}/webview.cc', '${lib_dir}/webview.cc') or { panic(err) }
 	download_webview2()
 	dl_spinner <- true
-}
-
-fn get_cxx() !string {
-	mut res := os.execute('g++ --version')
-	if res.exit_code == 0 {
-		return 'g++'
-	}
-	res = os.execute('clang++ --version')
-	if res.exit_code == 0 {
-		return 'clang++'
-	}
-	return error("Can't find C++ compiler. Make sure g++ or clang++ is executable.")
 }
 
 fn build(silent bool) {

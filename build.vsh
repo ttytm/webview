@@ -117,7 +117,7 @@ fn build(silent bool) {
 fn run(cmd cli.Command) ! {
 	// Remove old library files
 	execute('rm ${lib_dir}/webview.*')
-	silent := cmd.flags[0].get_bool()!
+	silent := cmd.flags.get_bool('silent')!
 	download(silent)
 	time.sleep(100 * time.millisecond)
 	build(silent)

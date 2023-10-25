@@ -21,6 +21,7 @@ build
 # Webview library files
 webview.cc
 webview.h
+webview.o
 
 # Common editor/system specific metadata
 .DS_Store

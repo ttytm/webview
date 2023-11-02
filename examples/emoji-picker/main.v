@@ -11,7 +11,7 @@ fn play_sound(_ &webview.Event) {
 	}
 }
 
-w := webview.create(debug: true)
+w := webview.create()
 w.set_title('Emoji Picker')
 w.set_size(352, 435, .@none)
 w.bind[voidptr]('play_sound', play_sound)

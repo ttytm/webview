@@ -95,7 +95,9 @@ const html = '<!DOCTYPE html>
   </body>
   <script>
     async function callV() {
-      console.log(await window.my_v_func(\'Hello from JS!\'));
+      // Call a V function that takes an argument and returns a value.
+      const res = await window.my_v_func(\'Hello from JS!\');
+      console.log(res);
     }
   </script>
 </html>'

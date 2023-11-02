@@ -11,7 +11,7 @@ mut:
 }
 
 fn main() {
-	w := webview.create(debug: true)
+	w := webview.create()
 	mut app := App{
 		settings: Settings{true}
 	}

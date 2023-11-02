@@ -69,7 +69,7 @@ fn main() {
 		settings: Settings{true}
 	}
 
-	w := webview.create(debug: true)
+	w := webview.create()
 	w.set_title('V webview examples')
 	w.set_size(800, 600, .@none)
 	w.set_icon('${@VMODROOT}/icon.ico')!

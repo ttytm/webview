@@ -34,15 +34,15 @@ purpose programming language with modern web technologies to design a graphical 
 
 - [Installing V from source](https://github.com/vlang/v#installing-v-from-source)
 
-**V webview module**
+**Webview Module**
 
-- Install it from source
+- From source
 
   ```sh
   v install --git https://github.com/ttytm/webview
   ```
 
-- Or as vpm module
+- Or as vpm package
 
   ```sh
   v install ttytm.webview
@@ -134,15 +134,17 @@ file and on its [vdoc site](https://ttytm.github.io/webview/webview.html).
 
 ## Debugging
 
-Use the `webview_debug` flag to enable developer tools (allowing _right click_ <kbd>Inspect Element</kbd>) and `console.log` prints to the terminal. E.g.:
+Use the `webview_debug` flag to enable developer tools
+(allowing _right click_ <kbd>Inspect Element</kbd>) and `console.log` prints to the terminal. E.g.:
 
 ```sh
 v -d webview_debug run .
 ```
 
-Alternatively, control the debug mode explicitly for a window by creating it with the optional debug argument.
+Alternatively, control the debug mode explicitly for a window by creating it with the optional debug
+argument.
 
-```v
+```v ignore
 webview.create() // enabled when the appliction was build with `-d webview_debug`
 webview.create(debug: true) // explicitly enabled for the window
 webview.create(debug: false) // explicitly disabled for the window

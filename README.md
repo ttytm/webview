@@ -132,6 +132,25 @@ An application example that uses this webview binding with SvelteKit for the UI 
 The overview of exported functions is accessible in the repositories [`src/lib.v`](https://github.com/ttytm/webview/blob/master/src/lib.v)
 file and on its [vdoc site](https://ttytm.github.io/webview/webview.html).
 
+## Debugging
+
+Use the `webview_debug` flag to enable developer tools (allowing _right click_ <kbd>Inspect Element</kbd>) and `console.log` prints to the terminal. E.g.:
+
+```sh
+v -d webview_debug run .
+```
+
+Alternatively, control the debug mode explicitly for a window by creating it with the optional debug argument.
+
+```v
+webview.create() // enabled when the appliction was build with `-d webview_debug`
+webview.create(debug: true) // explicitly enabled for the window
+webview.create(debug: false) // explicitly disabled for the window
+```
+
+> **Note**
+> The debug feature currently works on Linux and Windows.
+
 ## Disclaimer
 
 Until a stable version 1.0 is available, new features will be introduced, existing ones may change,

@@ -11,8 +11,8 @@ Source webview C library: https://github.com/webview/webview
 
 module webview
 
-import json
 import icon
+import json
 
 // Webview is a pointer to a webview instance.
 pub type Webview = C.webview_t
@@ -27,7 +27,7 @@ pub:
 
 [params]
 pub struct CreateOptions {
-	debug  bool
+	debug  ?bool
 	window voidptr
 }
 
@@ -45,6 +45,8 @@ pub enum Hint {
 
 pub const no_result = unsafe { nil }
 
+const debug = $if webview_debug ? { true } $else { false }
+
 // create creates a new webview instance. Optionally, a `debug` and `window` parameter can be passed.
 // If `debug` is `true` - developer tools will be enabled (if the platform supports them).
 // The `window` parameter can be a pointer to the native window handle. If it's non-null, then the
@@ -53,7 +55,14 @@ pub const no_result = unsafe { nil }
 // Returns null on failure. Creation can fail for various reasons such as when required runtime
 // dependencies are missing or when window creation fails.
 pub fn create(opts CreateOptions) &Webview {
-	return C.webview_create(int(opts.debug), opts.window)
+	// The window `debug` param takes precedence. If the window is reated with `debug` set to false,
+	// debugging will not be enabled for the window even the app is build with `-d webui_debug`.
+	dbg := if opt := opts.debug {
+		opt
+	} else {
+		webview.debug
+	}
+	return C.webview_create(int(dbg), opts.window)
 }
 
 // destroy destroys a webview and closes the native window.

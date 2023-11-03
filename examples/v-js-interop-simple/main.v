@@ -27,7 +27,7 @@ const doc = '<!DOCTYPE html>
 		<script>
 			// Functions that are declared in JS can also be called from your V program.
 			function myJsFunction(myStrArg) {
-				// NOTE: Building in debug mode enables developer tools for a winodw.
+				// NOTE: Building in debug mode enables developer tools for a window.
 				// Also, console.log will additionally be printed to the terminal.
 				// This feature currently works with Linux and Windows.
 				console.log("Called myJsFunction:", myStrArg);

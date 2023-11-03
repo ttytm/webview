@@ -36,33 +36,29 @@ purpose programming language with modern web technologies to design a graphical 
 
 **Webview Module**
 
-- From source
+- Install the module
 
   ```sh
+  # From source
   v install --git https://github.com/ttytm/webview
-  ```
-
-- Or as vpm package
-
-  ```sh
+  # Or as vpm package
   v install ttytm.webview
   ```
 
-## Usage
+- After the installation, build the webview C library to which the webview V module will bind.\
+  You can re-run the script at any point to rebuild the parent library with the latest upstream
+  changes.
 
-After the installation, build the webview C library to which the webview V module will bind.\
-You can re-run the script at any point to rebuild the library with the latest upstream changes.
+  ```sh
+  # For installations from source
+  ~/.vmodules/webview/build.vsh
+  # For installations as vpm module
+  ~/.vmodules/ttytm/webview/build.vsh
+  # PowerShell might require to prefix the script with `v`, e.g.:
+  v $HOME/.vmodules/webview/build.vsh
+  ```
 
-```sh
-# For installations from source
-~/.vmodules/webview/build.vsh
-# For installations as vpm module
-~/.vmodules/ttytm/webview/build.vsh
-# PowerShell might require to prefix the script with `v`, e.g.:
-v $HOME/.vmodules/webview/build.vsh
-```
-
-### Usage Example
+## Usage Example
 
 > **Note**
 > When running and building on Windows, it is recommended to use `gcc` for compilation. E.g.:
@@ -134,8 +130,8 @@ file and on its [vdoc site](https://ttytm.github.io/webview/webview.html).
 
 ## Debugging
 
-Use the `webview_debug` flag to enable developer tools
-(allowing _right click_ <kbd>Inspect Element</kbd>) and `console.log` prints to the terminal. E.g.:
+Use the `webview_debug` flag to enable developer tools -
+enabling _right click_ <kbd>Inspect Element</kbd> and `console.log` prints to the terminal. E.g.:
 
 ```sh
 v -d webview_debug run .
@@ -145,9 +141,9 @@ Alternatively, control the debug mode explicitly for a window by creating it wit
 argument.
 
 ```v ignore
-webview.create() // enabled when the appliction was build with `-d webview_debug`
+webview.create() // enabled when the application was build with `-d webview_debug`
 webview.create(debug: true) // explicitly enabled for the window
-webview.create(debug: false) // explicitly disabled for the window
+webview.create(debug: false) // explicitly disabled for the window, even when built with `-d webview_debug`
 ```
 
 > **Note**

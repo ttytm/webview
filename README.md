@@ -60,7 +60,7 @@ purpose programming language with modern web technologies to design a graphical 
 
 ## Usage Example
 
-> **Note**
+> [!NOTE]
 > When running and building on Windows, it is recommended to use `gcc` for compilation. E.g.:
 >
 > ```sh
@@ -146,7 +146,7 @@ webview.create(debug: true) // explicitly enabled for the window
 webview.create(debug: false) // explicitly disabled for the window, even when built with `-d webview_debug`
 ```
 
-> **Note**
+> [!NOTE]
 > The debug feature currently works on Linux and Windows.
 
 ## Disclaimer

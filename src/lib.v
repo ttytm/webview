@@ -12,11 +12,14 @@ Source webview C library: https://github.com/webview/webview
 module webview
 
 import icon
+import serve
+import os
 
 @[heap]
 pub struct Webview {
 mut:
-	w C.webview_t // Pointer to a webview instance.
+	w    C.webview_t // Pointer to a webview instance.
+	proc &os.Process
 }
 
 // An Event which a V function receives that is called by javascript.
@@ -31,6 +34,11 @@ pub:
 pub struct CreateOptions {
 	debug  ?bool
 	window voidptr
+}
+
+@[params]
+pub struct ServeOptions {
+	port u16 = 4321
 }
 
 // A Hint that is passed to the Webview 'set_size' method to determine the window sizing behavior.
@@ -64,12 +72,17 @@ pub fn create(opts CreateOptions) &Webview {
 	} else {
 		webview.debug
 	}
-	return &Webview{C.webview_create(int(dbg), opts.window)}
+	return &Webview{C.webview_create(int(dbg), opts.window), unsafe { nil }}
 }
 
 // destroy destroys a webview and closes the native window.
 pub fn (w Webview) destroy() {
 	C.webview_destroy(w.w)
+	if !isnil(w.proc) {
+		mut p := &os.Process{}
+		p = unsafe { w.proc }
+		p.signal_pgkill()
+	}
 }
 
 // run runs the main loop until it's terminated. After this function exits - you
@@ -135,6 +148,35 @@ pub fn (w &Webview) navigate(url string) {
 // set_html set webview HTML directly.
 pub fn (w &Webview) set_html(html string) {
 	C.webview_set_html(w.w, &char(html.str))
+}
+
+// serve_dev uses the given package manger to run the given script name and
+// navigates to the localhost address on which the application is served.
+// Example:
+// ```
+// // Runs `npm run dev` in the `ui` directory.
+// w.serve_dev('ui', .npm, 'dev')!
+// ```
+// vfmt off
+pub fn (mut w Webview) serve_dev(ui_path string, pkg_manager serve.PackageManger, script_name string) ! {
+	// vfmt on
+	if !isnil(w.proc) {
+		return error('a dev process is already running.
+	executable: `${w.proc.filename}`
+	arguments: `${w.proc.args.join(' ')}`
+	directory: `${w.proc.work_folder}`')
+	}
+	mut proc, port := serve.serve_dev(ui_path, pkg_manager, script_name) or { return err }
+	w.proc = proc
+	w.navigate('http://localhost:${port}')
+}
+
+// serve_static serves a UI that has been built into a static site on localhost and
+// navigates to it address. Optionally, a port can be specified to serve the site.
+// By default, the next free port from `4321` is used.
+pub fn (w &Webview) serve_static(ui_build_path string, opts ServeOptions) {
+	port := serve.serve_static(ui_build_path, opts.port)
+	w.navigate('http://localhost:${port}')
 }
 
 // init injects JavaScript code at the initialization of the new page. Every time

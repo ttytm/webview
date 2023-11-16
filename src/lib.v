@@ -13,13 +13,16 @@ module webview
 
 import icon
 
-// Webview is a pointer to a webview instance.
-pub type Webview = C.webview_t
+[heap]
+pub struct Webview {
+mut:
+	w C.webview_t // Pointer to a webview instance.
+}
 
 // An Event which a V function receives that is called by javascript.
 pub struct Event {
 pub:
-	instance &Webview // Pointer to the events webview instance.
+	instance C.webview_t // Pointer to the events webview instance.
 	event_id &char
 	args     &char
 }
@@ -61,30 +64,30 @@ pub fn create(opts CreateOptions) &Webview {
 	} else {
 		webview.debug
 	}
-	return C.webview_create(int(dbg), opts.window)
+	return &Webview{C.webview_create(int(dbg), opts.window)}
 }
 
 // destroy destroys a webview and closes the native window.
-pub fn (w &Webview) destroy() {
-	C.webview_destroy(w)
+pub fn (w Webview) destroy() {
+	C.webview_destroy(w.w)
 }
 
 // run runs the main loop until it's terminated. After this function exits - you
 // must destroy the webview.
 pub fn (w &Webview) run() {
-	C.webview_run(w)
+	C.webview_run(w.w)
 }
 
 // terminate stops the main loop. It is safe to call this function from another
 // other background thread.
 pub fn (w &Webview) terminate() {
-	C.webview_terminate(w)
+	C.webview_terminate(w.w)
 }
 
 // dispatch posts a function to be executed on the main thread. You normally do
 // not need to call this function, unless you want to tweak the native window.
 pub fn (w &Webview) dispatch(func fn ()) {
-	C.webview_dispatch(w, fn [func] (w &Webview, ctx voidptr) {
+	C.webview_dispatch(w.w, fn [func] (w C.webview_t, ctx voidptr) {
 		func()
 	}, 0)
 }
@@ -92,7 +95,7 @@ pub fn (w &Webview) dispatch(func fn ()) {
 // dispatch_ctx posts a function to be executed on the main thread. You normally do
 // not need to call this function, unless you want to tweak the native window.
 pub fn (w &Webview) dispatch_ctx(func fn (ctx voidptr), ctx voidptr) {
-	C.webview_dispatch(w, fn [func] (w &Webview, ctx voidptr) {
+	C.webview_dispatch(w.w, fn [func] (w C.webview_t, ctx voidptr) {
 		func(ctx)
 	}, ctx)
 }
@@ -101,7 +104,7 @@ pub fn (w &Webview) dispatch_ctx(func fn (ctx voidptr), ctx voidptr) {
 // the pointer is a GtkWindow pointer, when using a Cocoa backend the pointer is
 // a NSWindow pointer, when using a Win32 backend the pointer is a HWND pointer.
 pub fn (w &Webview) get_window() voidptr {
-	return C.webview_get_window(w)
+	return C.webview_get_window(w.w)
 }
 
 // set_icon updates the icon of the native window. It supports Windows HWND windows and Linux GTK
@@ -113,12 +116,12 @@ pub fn (w &Webview) set_icon(icon_file_path string) ! {
 
 // set_title updates the title of the native window. Must be called from the UI thread.
 pub fn (w &Webview) set_title(title string) {
-	C.webview_set_title(w, &char(title.str))
+	C.webview_set_title(w.w, &char(title.str))
 }
 
 // set_size updates the size of the native window. See WEBVIEW_HINT constants.
 pub fn (w &Webview) set_size(width int, height int, hint Hint) {
-	C.webview_set_size(w, width, height, int(hint))
+	C.webview_set_size(w.w, width, height, int(hint))
 }
 
 // navigate navigates webview to the given URL. URL may be a properly encoded data URI.
@@ -126,37 +129,37 @@ pub fn (w &Webview) set_size(width int, height int, hint Hint) {
 // Example: w.navigate('data:text/html,%3Ch1%3EHello%3C%2Fh1%3E')
 // Example: w.navigate('file://${@VMODROOT}/index.html')
 pub fn (w &Webview) navigate(url string) {
-	C.webview_navigate(w, &char(url.str))
+	C.webview_navigate(w.w, &char(url.str))
 }
 
 // set_html set webview HTML directly.
 pub fn (w &Webview) set_html(html string) {
-	C.webview_set_html(w, &char(html.str))
+	C.webview_set_html(w.w, &char(html.str))
 }
 
 // init injects JavaScript code at the initialization of the new page. Every time
 // the webview will open a new page - this initialization code will be executed.
 // It is guaranteed that code is executed before window.onload.
 pub fn (w &Webview) init(code string) {
-	C.webview_init(w, &char(code.str))
+	C.webview_init(w.w, &char(code.str))
 }
 
 // eval evaluates arbitrary JavaScript code. Evaluation happens asynchronously, also
 // the result of the expression is ignored. Use RPC bindings if you want to
 // receive notifications about the results of the evaluation.
 pub fn (w &Webview) eval(code string) {
-	C.webview_eval(w, &char(code.str))
+	C.webview_eval(w.w, &char(code.str))
 }
 
 // bind binds a V callback to a global JavaScript function that will appear under the given name.
 // The callback receives an `&Event` argument. Internally it uses webview_init().
 pub fn (w &Webview) bind[T](name string, func fn (&Event) T) {
-	C.webview_bind(w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
-		e := unsafe { &Event{w, event_id, args} }
-		spawn fn [func] [T](e &Event) {
+	C.webview_bind(w.w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
+		e := unsafe { &Event{w.w, event_id, args} }.async()
+		spawn fn [func, e] [T]() {
 			result := func(e)
 			e.@return(result, .value)
-		}(e.async())
+		}()
 	}, 0)
 }
 
@@ -164,27 +167,27 @@ pub fn (w &Webview) bind[T](name string, func fn (&Event) T) {
 // appear under the given name. The callback receives an `&Event` argument. The callback can return an
 // error to the calling JavaScript function. Internally it uses webview_init().
 pub fn (w &Webview) bind_opt[T](name string, func fn (&Event) !T) {
-	C.webview_bind(w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
-		e := unsafe { &Event{w, event_id, args} }
-		spawn fn [func] [T](e &Event) {
+	C.webview_bind(w.w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
+		e := unsafe { &Event{w.w, event_id, args} }.async()
+		spawn fn [func, e] [T]() {
 			if result := func(e) {
 				e.@return(result, .value)
 			} else {
 				e.@return(err.str(), .error)
 			}
-		}(e.async())
+		}()
 	}, 0)
 }
 
 // bind_with_ctx binds a V callback to a global JavaScript function that will appear under the given name.
 // The callback receives an `&Event` and a user-provided ctx pointer argument.
 pub fn (w &Webview) bind_with_ctx[T](name string, func fn (e &Event, ctx voidptr) T, ctx voidptr) {
-	C.webview_bind(w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
-		e := unsafe { &Event{w, event_id, args} }
-		spawn fn [func, ctx] [T](e &Event) {
+	C.webview_bind(w.w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
+		e := unsafe { &Event{w.w, event_id, args} }.async()
+		spawn fn [func, e, ctx] [T]() {
 			result := func(e, ctx)
 			e.@return(result, .value)
-		}(e.async())
+		}()
 	}, ctx)
 }
 
@@ -192,8 +195,8 @@ pub fn (w &Webview) bind_with_ctx[T](name string, func fn (e &Event, ctx voidptr
 // appear under the given name. The callback receives an `&Event` and a user-provided ctx pointer argument.
 // The callback can return an error to the calling JavaScript function. Internally it uses webview_init().
 pub fn (w &Webview) bind_opt_with_ctx[T](name string, func fn (e &Event, ctx voidptr) T, ctx voidptr) {
-	C.webview_bind(w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
-		e := unsafe { &Event{w, event_id, args} }
+	C.webview_bind(w.w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
+		e := unsafe { &Event{w.w, event_id, args} }
 		spawn fn [func, ctx] [T](e &Event) {
 			if result := func(e, ctx) {
 				e.@return(result, .value)
@@ -206,14 +209,14 @@ pub fn (w &Webview) bind_opt_with_ctx[T](name string, func fn (e &Event, ctx voi
 
 // unbind removes a native C callback that was previously set by webview_bind.
 pub fn (w &Webview) unbind(name string) {
-	C.webview_unbind(w, &char(name.str))
+	C.webview_unbind(w.w, &char(name.str))
 }
 
 // dispatch posts a function to be executed on the main thread. You normally do
 // not need to call this function, unless you want to tweak the native window.
 // This is a shorthand for `e.instance.dispatch()`.
 pub fn (e &Event) dispatch(func fn ()) {
-	C.webview_dispatch(e.instance, fn [func] (w &Webview, ctx voidptr) {
+	C.webview_dispatch(e.instance, fn [func] (w C.webview_t, ctx voidptr) {
 		func()
 	}, 0)
 }
@@ -222,7 +225,7 @@ pub fn (e &Event) dispatch(func fn ()) {
 // not need to call this function, unless you want to tweak the native window.
 // This is a shorthand for `e.instance.dispatch_ctx()`.
 pub fn (e &Event) dispatch_ctx(func fn (ctx voidptr), ctx voidptr) {
-	C.webview_dispatch(e.instance, fn [func] (w &Webview, ctx voidptr) {
+	C.webview_dispatch(e.instance, fn [func] (w C.webview_t, ctx voidptr) {
 		func(ctx)
 	}, ctx)
 }

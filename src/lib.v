@@ -37,8 +37,16 @@ pub struct CreateOptions {
 }
 
 @[params]
-pub struct ServeOptions {
+pub struct ServeStaticOptions {
 	port u16 = 4321
+}
+
+@[params]
+pub struct ServeDevOptions {
+	// vfmt off
+	pkg_manager serve.PackageManager // .node || .yarn || .pnpm
+	// vfmt on
+	script_name string = 'dev'
 }
 
 // A Hint that is passed to the Webview 'set_size' method to determine the window sizing behavior.
@@ -138,7 +146,7 @@ pub fn (w &Webview) set_size(width int, height int, hint Hint) {
 }
 
 // navigate navigates webview to the given URL. URL may be a properly encoded data URI.
-// Example: w.navigate('https://github.com/webview/webview') {
+// Example: w.navigate('https://github.com/webview/webview')
 // Example: w.navigate('data:text/html,%3Ch1%3EHello%3C%2Fh1%3E')
 // Example: w.navigate('file://${@VMODROOT}/index.html')
 pub fn (w &Webview) navigate(url string) {
@@ -155,18 +163,18 @@ pub fn (w &Webview) set_html(html string) {
 // Example:
 // ```
 // // Runs `npm run dev` in the `ui` directory.
-// w.serve_dev('ui', .npm, 'dev')!
+// w.serve_dev('ui')!
+// // Runs `yarn run start` in the `ui` directory (specifying an absolute path).
+// w.serve_dev(os.join_path(@VMODROOT, 'ui'), pkg_manager: 'yarn', script_name: 'start')!
 // ```
-// vfmt off
-pub fn (mut w Webview) serve_dev(ui_path string, pkg_manager serve.PackageManger, script_name string) ! {
-	// vfmt on
+pub fn (mut w Webview) serve_dev(ui_path string, opts ServeDevOptions) ! {
 	if !isnil(w.proc) {
 		return error('a dev process is already running.
 	executable: `${w.proc.filename}`
 	arguments: `${w.proc.args.join(' ')}`
 	directory: `${w.proc.work_folder}`')
 	}
-	mut proc, port := serve.serve_dev(ui_path, pkg_manager, script_name) or { return err }
+	mut proc, port := serve.serve_dev(ui_path, opts.pkg_manager, opts.script_name) or { return err }
 	w.proc = proc
 	w.navigate('http://localhost:${port}')
 }
@@ -174,7 +182,7 @@ pub fn (mut w Webview) serve_dev(ui_path string, pkg_manager serve.PackageManger
 // serve_static serves a UI that has been built into a static site on localhost and
 // navigates to it address. Optionally, a port can be specified to serve the site.
 // By default, the next free port from `4321` is used.
-pub fn (w &Webview) serve_static(ui_build_path string, opts ServeOptions) {
+pub fn (w &Webview) serve_static(ui_build_path string, opts ServeStaticOptions) {
 	port := serve.serve_static(ui_build_path, opts.port)
 	w.navigate('http://localhost:${port}')
 }

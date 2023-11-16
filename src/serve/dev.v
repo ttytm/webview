@@ -3,7 +3,7 @@ module serve
 import os
 import term
 
-pub enum PackageManger {
+pub enum PackageManager {
 	npm
 	yarn
 	pnpm // Good technology but too woke author. Usage not recommended.
@@ -11,7 +11,7 @@ pub enum PackageManger {
 
 // serve_dev uses the given package manger to run the given script name and
 // navigates to the localhost address on which the application is served.
-pub fn serve_dev(ui_path string, pkg_manager PackageManger, script_name string) !(&os.Process, int) {
+pub fn serve_dev(ui_path string, pkg_manager PackageManager, script_name string) !(&os.Process, int) {
 	npm_path := os.find_abs_path_of_executable(pkg_manager.str()) or {
 		eprintln('failed to find ${pkg_manager}.\nMake sure  is executable.')
 		exit(0)

@@ -12,7 +12,6 @@ Source webview C library: https://github.com/webview/webview
 module webview
 
 import icon
-import json
 
 // Webview is a pointer to a webview instance.
 pub type Webview = C.webview_t
@@ -25,7 +24,7 @@ pub:
 	args     &char
 }
 
-[params]
+@[params]
 pub struct CreateOptions {
 	debug  ?bool
 	window voidptr
@@ -177,19 +176,6 @@ pub fn (w &Webview) bind_opt[T](name string, func fn (&Event) !T) {
 	}, 0)
 }
 
-// bind_ctx binds a V callback to a global JavaScript function that will appear under the given name.
-// The callback receives an `&Event` and a user-provided ctx pointer argument.
-[deprecated: 'will be removed with v0.7; use `bind_with_ctx` instead.']
-pub fn (w &Webview) bind_ctx[T](name string, func fn (e &Event, ctx voidptr) T, ctx voidptr) {
-	C.webview_bind(w, &char(name.str), fn [w, func] [T](event_id &char, args &char, ctx voidptr) {
-		e := unsafe { &Event{w, event_id, args} }
-		spawn fn [func, ctx] [T](e &Event) {
-			result := func(e, ctx)
-			e.@return(result, .value)
-		}(e.async())
-	}, ctx)
-}
-
 // bind_with_ctx binds a V callback to a global JavaScript function that will appear under the given name.
 // The callback receives an `&Event` and a user-provided ctx pointer argument.
 pub fn (w &Webview) bind_with_ctx[T](name string, func fn (e &Event, ctx voidptr) T, ctx voidptr) {
@@ -260,46 +246,4 @@ pub fn (e &Event) get_arg[T](idx int) !T {
 	} $else {
 		return e.get_complex_args_json[T](idx)!
 	}
-}
-
-// string parses the JavaScript argument with the given index as string.
-[deprecated: 'will be removed with v0.7; use `get_arg[T](idx int) !T` instead. E.g: `e.get_arg[string](0)!`']
-pub fn (e &Event) string(idx usize) string {
-	return e.args_json[string]() or { return '' }[int(idx)] or { '' }
-}
-
-// int parses the JavaScript argument with the given index as integer.
-[deprecated: 'will be removed with v0.7; use `get_arg[T](idx int) !T` instead. E.g: `e.get_arg[int](0)!`']
-pub fn (e &Event) int(idx usize) int {
-	return e.args_json[int]() or { return 0 }[int(idx)] or { return 0 }
-}
-
-// bool parses the JavaScript argument with the given index as boolean.
-[deprecated: 'will be removed with v0.7; use `get_arg[T](idx int) !T` instead. E.g: `e.get_arg[bool](0)!`']
-pub fn (e &Event) bool(idx usize) bool {
-	return e.args_json[bool]() or { return false }[int(idx)] or { return false }
-}
-
-// string_opt parses the JavaScript argument with the given index as string option.
-[deprecated: 'will be removed with v0.7; use `get_arg[T](idx int) !T` instead. E.g: `e.get_arg[string](0)!`']
-pub fn (e &Event) string_opt(idx usize) ?string {
-	return e.args_json[string]() or { return none }[int(idx)] or { return none }
-}
-
-// int_opt parses the JavaScript argument with the given index as integer option.
-[deprecated: 'will be removed with v0.7; use `get_arg[T](idx int) !T` instead. E.g: `e.get_arg[int](0)!`']
-pub fn (e &Event) int_opt(idx usize) ?int {
-	return e.args_json[int]() or { return none }[int(idx)] or { return none }
-}
-
-// bool_opt parses and return the argument with the given index as boolean option.
-[deprecated: 'will be removed with v0.7; use `get_arg[T](idx int) !T` instead. E.g: `e.get_arg[bool](0)!`']
-pub fn (e &Event) bool_opt(idx usize) ?bool {
-	return e.args_json[bool]() or { return none }[int(idx)] or { return none }
-}
-
-// decode parses the JavaScript argument with the given index into a V data type.
-[deprecated: 'will be removed with v0.7; use `get_arg[T](idx int) !T` instead. E.g: `e.get_arg[MyStruct](0)!`']
-pub fn (e &Event) decode[T](idx usize) !T {
-	return json.decode(T, e.string(idx)) or { return error('Failed decoding arguments. ${err}') }
 }

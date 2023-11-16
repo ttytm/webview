@@ -59,8 +59,3 @@ fn (e &Event) get_complex_args_json[T](idx int) !T {
 		return error('Failed finding argument of type `${T.name}` at index `${idx}`')
 	}) or { return error('Failed decoding argument of type `${T.name}` at index `${idx}`. ${err}') }
 }
-
-[deprecated]
-fn (e &Event) args_json[T]() ![]T {
-	return json.decode([]T, unsafe { e.args.vstring() })!
-}

@@ -25,7 +25,7 @@ pub fn set_icon(window voidptr, icon_file_path string) ! {
 	result := SetIconResult(C.set_icon(window, &char(icon_file_path.str)))
 	match result {
 		.ok { return }
-		.icon_not_found { return error('Failed finding icon.') }
+		.icon_not_found { return error('Failed to find icon at `${icon_file_path}`.') }
 		.window_not_found { return error('Failed to set icon. Window not found.') }
 		// .os_unsupported { return error('Failed to set icon. Unsupported OS.') }
 		.os_unsupported { return }

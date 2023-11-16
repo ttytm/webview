@@ -39,9 +39,9 @@ purpose programming language with modern web technologies to design a graphical 
 - Install the module
 
   ```sh
-  # From source
-  v install --git https://github.com/ttytm/webview
-  # Or as vpm package
+  # Into `<vmodules_dir>/webview`
+  v install https://github.com/ttytm/webview
+  # OR as vpm module under a namespace `<vmodules_dir>/ttytm/webview`
   v install ttytm.webview
   ```
 

@@ -13,7 +13,7 @@ module webview
 
 import icon
 
-[heap]
+@[heap]
 pub struct Webview {
 mut:
 	w C.webview_t // Pointer to a webview instance.

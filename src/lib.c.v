@@ -12,7 +12,7 @@ $if linux {
 	#pkgconfig webkit2gtk-4.0
 }
 
-[typedef]
+@[typedef]
 struct C.webview_t {}
 
 fn C.webview_create(debug int, window voidptr) C.webview_t

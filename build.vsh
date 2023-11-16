@@ -64,7 +64,7 @@ fn spinner(ch chan bool) {
 	}
 }
 
-[if windows]
+@[if windows]
 fn download_webview2() {
 	http.download_file('https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2',
 		'${lib_dir}/webview2.zip') or { panic(err) }

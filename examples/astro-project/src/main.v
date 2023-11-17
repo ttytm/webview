@@ -1,5 +1,5 @@
 import os
-import webview as ui
+import ttytm.webview as ui
 
 fn increment(e &ui.Event) !int {
 	return e.get_arg[int](0)! + 1

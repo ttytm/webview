@@ -1,4 +1,4 @@
-import webview
+import ttytm.webview
 import os
 
 const sound_file_path = '${@VMODROOT}/assets/pop.wav'

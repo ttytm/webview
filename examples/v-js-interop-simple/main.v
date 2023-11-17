@@ -1,4 +1,4 @@
-import webview
+import ttytm.webview
 
 const doc = '<!DOCTYPE html>
 <html lang="en">

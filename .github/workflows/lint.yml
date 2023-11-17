@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 env:
-  MOD_PATH: ~/.vmodules/webview
+  MOD_PATH: ~/.vmodules/ttytm/webview
 
 jobs:
   fmt:

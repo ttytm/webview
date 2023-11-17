@@ -1,4 +1,4 @@
-import webview { Event, Webview }
+import ttytm.webview { Event, Webview }
 
 // Bind V callbacks to global javascript functions.
 fn (mut app App) bind(w &Webview) {

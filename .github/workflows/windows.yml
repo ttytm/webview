@@ -10,7 +10,7 @@ defaults:
 env:
   REPO_NAME: ${{ github.event.repository.name }}
   # Path where the module is installed with `v install <giturl>`
-  MOD_PATH: ~/.vmodules/webview
+  MOD_PATH: ~/.vmodules/ttytm/webview
 
 jobs:
   setup:
@@ -27,6 +27,7 @@ jobs:
       - name: Setup ${{ env.REPO_NAME }}
         run: |
           ${{ env.REPO_NAME }}/build.vsh --silent
+          mkdir -p ${{ env.MOD_PATH }}
           cp -r ${{ env.REPO_NAME }} ${{ env.MOD_PATH }}
       - name: Cache
         uses: actions/cache/save@v3

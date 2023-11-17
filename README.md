@@ -39,9 +39,6 @@ purpose programming language with modern web technologies to design a graphical 
 - Install the module
 
   ```sh
-  # Into `<vmodules_dir>/webview`
-  v install https://github.com/ttytm/webview
-  # OR as vpm module under a namespace `<vmodules_dir>/ttytm/webview`
   v install ttytm.webview
   ```
 
@@ -50,12 +47,10 @@ purpose programming language with modern web technologies to design a graphical 
   changes.
 
   ```sh
-  # For installations from source
-  v ~/.vmodules/webview/build.vsh
-  # For installations as vpm module
+  # Linux/macOS
   v ~/.vmodules/ttytm/webview/build.vsh
-  # PowerShell might require to prefix the script with `v`, e.g.:
-  v $HOME/.vmodules/webview/build.vsh
+  # PowerShell
+  v $HOME/.vmodules/ttytm/webview/build.vsh
   ```
 
 ## Usage Example
@@ -70,8 +65,7 @@ purpose programming language with modern web technologies to design a graphical 
 <br>
 
 ```v ignore
-import webview // For installations from source
-// import ttytm.webview // For installations as vpm module
+import ttytm.webview
 
 const html = '<!DOCTYPE html>
 <html lang="en">
@@ -126,15 +120,15 @@ CONSOLE LOG Hello from JS! Hello back from V!
 
 Examples that can be found in the [`examples/`](https://github.com/ttytm/webview/tree/master/examples) directory of the repository.
 
-- [v-js-interop-simple](https://github.com/ttytm/webview/tree/main/examples/v-js-interop-simple) - simple example with a similar complexity as the readme example above.
-- [v-js-interop-app](https://github.com/ttytm/webview/tree/main/examples/v-js-interop-app) - example with the basic code architecture of an application.
-- [project-structure](https://github.com/ttytm/webview/tree/main/examples/project-structure) - `v-js-interop-app` example organized into a directory structure that can be used as a starting point for more complex projects.
-- [astro-project](https://github.com/ttytm/webview/tree/main/examples/astro-project) - example using a modern web framework for the UI.
+1. [v-js-interop-simple](https://github.com/ttytm/webview/tree/main/examples/v-js-interop-simple) - simple example with a similar complexity as the readme example above.
+2. [v-js-interop-app](https://github.com/ttytm/webview/tree/main/examples/v-js-interop-app) - shows the basic code architecture of an application.
+3. [project-structure](https://github.com/ttytm/webview/tree/main/examples/project-structure) - organizes `2. v-js-interop-app` into a directory structure that can be used as orientation for more complex projects.
+4. [astro-project](https://github.com/ttytm/webview/tree/main/examples/astro-project) - uses a modern web framework for the UI.
 
-External
+External Examples
 
-- [LVbag](https://github.com/ttytm/LVbag/blob/main/examples/gui_project) - a minimal example of how to use a UI that is embedded into the executable.
-- [emoji-mart-desktop](https://github.com/ttytm/emoji-mart-desktop) - application that combines above concepts. It uses SvelteKit for the UI and embeds it inside a single executable.
+1. [LVbag](https://github.com/ttytm/LVbag/blob/main/examples/gui_project) - minimal example that automates embedding of the UI into the executable.
+2. [emoji-mart-desktop](https://github.com/ttytm/emoji-mart-desktop) - application that combines above concepts. It uses SvelteKit for the UI and embeds it inside a single executable.
 
 ## Documentation
 

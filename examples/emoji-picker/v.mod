@@ -2,5 +2,5 @@ Module {
 	name: 'emoji-picker'
 	description: 'A V webview example'
 	license: 'MIT'
-	dependencies: []
+	dependencies: ['ttytm.webview']
 }

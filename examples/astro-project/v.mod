@@ -3,5 +3,5 @@ Module {
 	description: 'Astro + V + webview'
 	version: '0.1.0'
 	license: 'MIT'
-	dependencies: [https://github.com/ttytm/webview]
+	dependencies: ['ttytm.webview']
 }

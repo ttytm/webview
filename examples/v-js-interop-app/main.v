@@ -1,4 +1,4 @@
-import webview { Event }
+import ttytm.webview { Event }
 import rand
 import net.http
 import time

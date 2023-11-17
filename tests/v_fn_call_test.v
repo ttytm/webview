@@ -1,4 +1,4 @@
-import webview
+import ttytm.webview
 import time
 import os
 

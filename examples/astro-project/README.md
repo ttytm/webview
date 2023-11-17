@@ -21,8 +21,8 @@ cd examples/astro-project
   npm --prefix ui i
   ```
 
-- Run the app in a development environment. E.g., this enables the web-inspector and hot-reload of the webview
-  window while working on the UI
+- Run the app in a development environment. E.g., this enables the web-inspector and hot-reload of
+  the webview window while working on the UI
 
   ```sh
   v -d dev run .
@@ -48,8 +48,8 @@ cd examples/astro-project
   yarn --cwd ui
   ```
 
-- Run the app in a development environment. E.g., this enables the web-inspector and hot-reload of the webview
-  window while working on the UI
+- Run the app in a development environment. E.g., this enables the web-inspector and hot-reload of
+  the webview window while working on the UI
 
   ```sh
   v -d dev run .
@@ -84,8 +84,8 @@ cd examples/astro-project
   pnpm --prefix ui i
   ```
 
-- Run the app in a development environment. E.g., this enables the web-inspector and hot-reload of the webview
-  window while working on the UI
+- Run the app in a development environment. E.g., this enables the web-inspector and hot-reload of
+  the webview window while working on the UI
 
   ```sh
   v -d dev run .

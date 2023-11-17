@@ -300,3 +300,9 @@ pub fn (e &Event) get_arg[T](idx int) !T {
 		return e.get_complex_args_json[T](idx)!
 	}
 }
+
+// open opens a path or URL with the system's default app.
+pub fn open(e &Event) ! {
+	url := e.get_arg[string](0)!
+	os.open_uri(url)!
+}

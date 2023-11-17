@@ -133,7 +133,7 @@ Examples that can be found in the [`examples/`](https://github.com/ttytm/webview
 
 External
 
-- [LVbag](https://github.com/ttytm/LVbag/blob/main/examples/gui_project/main.v) - a minimal example of how to use a UI that is embedded into the executable.
+- [LVbag](https://github.com/ttytm/LVbag/blob/main/examples/gui_project) - a minimal example of how to use a UI that is embedded into the executable.
 - [emoji-mart-desktop](https://github.com/ttytm/emoji-mart-desktop) - application that combines above concepts. It uses SvelteKit for the UI and embeds it inside a single executable.
 
 ## Documentation

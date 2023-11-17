@@ -2,7 +2,6 @@ name: Lint Docs
 
 on:
   push:
-    branches: [main]
     paths: ['**/*.md', '**/*.yml']
   pull_request:
 

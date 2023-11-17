@@ -15,19 +15,20 @@ cd examples/astro-project
 <details open>
 <summary><b>Npm</b></summary>
 
-- Install dependencies
+- Install the dependencies
 
   ```sh
   npm --prefix ui i
   ```
 
-- Run in a development environment - e.g., to enable hot reload in the webview window while
+- Run the app in a development environment. E.g., this enables the web-inspector and hot-reload of the webview
+  window while working on the UI
 
   ```sh
   v -d dev run .
   ```
 
-- Run the static build ui
+- Build the UI into a static output and run the app
 
   ```sh
   npm --prefix ui run build
@@ -41,19 +42,20 @@ cd examples/astro-project
 <details>
 <summary><b>yarn</b></summary>
 
-- Install dependencies
+- Install the dependencies
 
   ```sh
   yarn --cwd ui
   ```
 
-- Run in a development environment - e.g., to enable hot reload in the webview window while
+- Run the app in a development environment. E.g., this enables the web-inspector and hot-reload of the webview
+  window while working on the UI
 
   ```sh
   v -d dev run .
   ```
 
-- Run the static build ui
+- Build the UI into a static output and run the app
 
   ```sh
   yarn --cwd ui run build
@@ -67,19 +69,29 @@ cd examples/astro-project
 <details>
 <summary><b>Pnpm</b></summary>
 
-- Install dependencies
+- Update `src/main.v`
+
+  https://github.com/ttytm/webview/blob/3e7f26b82df254871ac21f26d370122f9752e969/examples/astro-project/src/main.v#L22-L24
+
+  ```v
+  // w.serve_dev(ui_path)!
+  w.serve_dev(ui_path, pkg_manager: .pnpm)! // <- specify pnpm as package manager.
+  ```
+
+- Install the dependencies
 
   ```sh
   pnpm --prefix ui i
   ```
 
-- Run in a development environment - e.g., to enable hot reload in the webview window while
+- Run the app in a development environment. E.g., this enables the web-inspector and hot-reload of the webview
+  window while working on the UI
 
   ```sh
   v -d dev run .
   ```
 
-- Run static build ui
+- Build the UI into a static output and run the app
 
   ```sh
   pnpm --prefix ui run build

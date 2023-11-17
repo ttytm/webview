@@ -20,10 +20,7 @@ fn main() {
 	$if dev ? {
 		w.set_icon(os.join_path(ui_path, 'public', 'favicon.svg'))!
 		w.serve_dev(ui_path)!
-		// When switching to another package manager, delete the current package lock file, i.e.
-		// `package-lock.json` for npm and, if you've already run the package manager's install
-		// command, the `npm_modules` directory.
-		// w.serve_dev(ui_path, pkg_manager: .yarn)! // `w.serve_dev(ui_path)!` would work with `yarn` as well.
+		// w.serve_dev(ui_path, pkg_manager: .yarn)! // `w.serve_dev(ui_path)!` works with `yarn` as well.
 		// w.serve_dev(ui_path, pkg_manager: .pnpm)!
 	} $else {
 		build_path := os.join_path(ui_path, 'dist')

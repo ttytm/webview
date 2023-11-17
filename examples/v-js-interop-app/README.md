@@ -1,11 +1,18 @@
-# Webview V-JS-Interop
+# V-JS-Interop Example
 
-This example shows how to call V from JS in the GUI and vice versa.
+An example with the basic code architecture of an application.
+It shows how to call V from JS and vice versa.
+
+## Run
+
+From the examples directory
 
 ```sh
-## Run
-# from v-js-interop directory
 v run .
-# from webview src directory
+```
+
+Or from webview src directory
+
+```sh
 v run examples/v-js-interop/
 ```

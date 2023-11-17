@@ -51,16 +51,16 @@ purpose programming language with modern web technologies to design a graphical 
 
   ```sh
   # For installations from source
-  ~/.vmodules/webview/build.vsh
+  v ~/.vmodules/webview/build.vsh
   # For installations as vpm module
-  ~/.vmodules/ttytm/webview/build.vsh
+  v ~/.vmodules/ttytm/webview/build.vsh
   # PowerShell might require to prefix the script with `v`, e.g.:
   v $HOME/.vmodules/webview/build.vsh
   ```
 
 ## Usage Example
 
-> [!NOTE]
+> [!TIP]
 > When running and building on Windows, it is recommended to use `gcc` for compilation. E.g.:
 >
 > ```sh
@@ -122,13 +122,29 @@ CONSOLE LOG Hello from JS! Hello back from V!
 
 ---
 
-Extended examples can be found in the [`examples/`](https://github.com/ttytm/webview/tree/master/examples) directory.\
-An application example that uses this webview binding with SvelteKit for the UI is [emoji-mart-desktop](https://github.com/ttytm/emoji-mart-desktop).
+### Additional Examples
 
-The overview of exported functions is accessible in the repositories [`src/lib.v`](https://github.com/ttytm/webview/blob/master/src/lib.v)
+Examples that can be found in the [`examples/`](https://github.com/ttytm/webview/tree/master/examples) directory of the repository.
+
+- [v-js-interop-simple](https://github.com/ttytm/webview/tree/main/examples/v-js-interop-simple) - simple example with a similar complexity as the readme example above.
+- [v-js-interop-app](https://github.com/ttytm/webview/tree/main/examples/v-js-interop-app) - example with the basic code architecture of an application.
+- [project-structure](https://github.com/ttytm/webview/tree/main/examples/project-structure) - `v-js-interop-app` example organized into a directory structure that can be used as a starting point for more complex projects.
+- [astro-project](https://github.com/ttytm/webview/tree/main/examples/astro-project) - example using a modern web framework for the UI.
+
+External
+
+- [LVbag](https://github.com/ttytm/LVbag/blob/main/examples/gui_project/main.v) - a minimal example of how to use a UI that is embedded into the executable.
+- [emoji-mart-desktop](https://github.com/ttytm/emoji-mart-desktop) - application that combines above concepts. It uses SvelteKit for the UI and embeds it inside a single executable.
+
+## Documentation
+
+An overview of exported functions is accessible in the repositories [`src/lib.v`](https://github.com/ttytm/webview/blob/master/src/lib.v)
 file and on its [vdoc site](https://ttytm.github.io/webview/webview.html).
 
-## Debugging
+### Debugging
+
+> [!NOTE]
+> The debug feature currently works on Linux and Windows.
 
 Use the `webview_debug` flag to enable developer tools -
 enabling _right click_ <kbd>Inspect Element</kbd> and `console.log` prints to the terminal. E.g.:
@@ -137,8 +153,7 @@ enabling _right click_ <kbd>Inspect Element</kbd> and `console.log` prints to th
 v -d webview_debug run .
 ```
 
-Alternatively, control the debug mode explicitly for a window by creating it with the optional debug
-argument.
+Alternatively, control the debug mode explicitly for a window by using the debug parameter.
 
 ```v ignore
 webview.create() // enabled when the application was build with `-d webview_debug`
@@ -146,10 +161,16 @@ webview.create(debug: true) // explicitly enabled for the window
 webview.create(debug: false) // explicitly disabled for the window, even when built with `-d webview_debug`
 ```
 
-> [!NOTE]
-> The debug feature currently works on Linux and Windows.
-
 ## Disclaimer
 
 Until a stable version 1.0 is available, new features will be introduced, existing ones may change,
 or breaking changes may occur in minor(`0.<minor>.*`) versions.
+
+## Complementary Projects
+
+- [Dialog](https://github.com/ttytm/dialog) - Cross-platform utility library to open system dialogs - files, message boxes etc.
+- [LVbag](https://github.com/ttytm/LVbag) - Generate embedded file lists for directories.
+
+## License
+
+Open source software under the MIT license.

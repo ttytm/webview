@@ -1,4 +1,4 @@
-# Webview Project Structure
+# Project Structure Example
 
 This example integrates the [`v-js-interop-app`](https://github.com/ttytm/webview/tree/master/examples/v-js-interop-app) example
 into a project structure that can be used as a starting guide for more complex Webview projects.
@@ -18,10 +18,14 @@ into a project structure that can be used as a starting guide for more complex W
 └── v.mod
 ```
 
+From the examples directory
+
 ```sh
-## Run
-# from project-structure directory
 v run .
-# from webview src directory
+```
+
+Or from webview src directory
+
+```sh
 v run examples/project-structure/
 ```

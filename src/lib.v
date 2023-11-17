@@ -174,7 +174,7 @@ pub fn (mut w Webview) serve_dev(ui_path string, opts ServeDevOptions) ! {
 	arguments: `${w.proc.args.join(' ')}`
 	directory: `${w.proc.work_folder}`')
 	}
-	mut proc, port := serve.serve_dev(ui_path, opts.pkg_manager, opts.script_name) or { return err }
+	mut proc, port := serve.serve_dev(ui_path, opts.pkg_manager, opts.script_name)!
 	w.proc = proc
 	w.navigate('http://localhost:${port}')
 }
@@ -182,8 +182,8 @@ pub fn (mut w Webview) serve_dev(ui_path string, opts ServeDevOptions) ! {
 // serve_static serves a UI that has been built into a static site on localhost and
 // navigates to it address. Optionally, a port can be specified to serve the site.
 // By default, the next free port from `4321` is used.
-pub fn (w &Webview) serve_static(ui_build_path string, opts ServeStaticOptions) {
-	port := serve.serve_static(ui_build_path, opts.port)
+pub fn (w &Webview) serve_static(ui_build_path string, opts ServeStaticOptions) ! {
+	port := serve.serve_static(ui_build_path, opts.port)!
 	w.navigate('http://localhost:${port}')
 }
 

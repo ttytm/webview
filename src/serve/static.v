@@ -11,11 +11,17 @@ struct Context {
 // serve_static serves a UI that has been built into a static site on localhost and
 // navigates to it address. Optionally, a port can be specified to serve the site.
 // By default, the next free port from `4321` is used.
-pub fn serve_static(ui_path string, port u16) u16 {
+pub fn serve_static(ui_path string, port u16) !u16 {
+	if !os.exists(ui_path) {
+		return error('failed to find ui path `${ui_path}`.')
+	}
+	if !os.is_dir(ui_path) {
+		return error('ui path `${ui_path}` is not a directory.')
+	}
 	mut final_port := port
 	for {
 		if mut l := net.listen_tcp(.ip6, ':${port}') {
-			l.close() or { panic(err) }
+			l.close()!
 			break
 		}
 		final_port++

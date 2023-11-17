@@ -1,0 +1,36 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Counter from '../components/Counter.astro';
+import GitHub from '../components/GitHub.astro';
+---
+
+<Layout title="Astro + V + webview.">
+	<main class="grid text-slate-200">
+		<h1 class="text-5xl font-bold mb-6">
+			<span class="text-astro">Astro</span>
+			<span class="text-slate-500 text-3xl relative -top-0.5">+</span>
+			<span class="text-v font-black">V</span>
+			<span class="text-slate-500 text-3xl relative -top-0.5">+</span>
+			 webview
+		</h1>
+		<h2 class="text-lg text-center text-slate-400 mb-8">
+			Build a fast, fully-fledged system applications while<br /> designing the GUI with modern web
+			frameworks.
+		</h2>
+		<Counter />
+		<GitHub />
+	</main>
+</Layout>
+
+<style>
+	.text-astro {
+		background-image: linear-gradient(to right, #7e63fe, #7e63a7);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+	.text-v {
+		background-image: linear-gradient(to right, #597dae 50%, #597dae 50%, #4c637f 50%, #4c637f 50%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+</style>

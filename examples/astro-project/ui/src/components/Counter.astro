@@ -1,0 +1,27 @@
+<button
+	type="button"
+	id="counter"
+	class="cursor-pointer m-auto py-2.5 px-5 font-semibold text-slate-300 rounded-lg"
+	>Count <span class="ml-0.5">0</span></button
+>
+
+<script>
+	const countBtn = document.getElementById('counter')!;
+	const count = countBtn.querySelector('span')!;
+	countBtn.addEventListener('click', async () => {
+		// Calls a V function that takes an argument and returns a Value.
+		const res = await __increment(Number(count.textContent));
+		count.textContent = res.toString();
+	});
+</script>
+
+<style>
+	#counter {
+		background: linear-gradient(to right, #274060, #1b2845);
+		box-shadow: 0px 0px 6px 2px transparent;
+		transition: box-shadow 0.2s cubic-bezier(0.17, 0.67, 0.26, 0.86);
+	}
+	#counter:active {
+		box-shadow: 0px 0px 6px 2px #7e63fe44;
+	}
+</style>

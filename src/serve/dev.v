@@ -11,7 +11,7 @@ pub enum PackageManager {
 
 // serve_dev uses the given package manger to run the given script name and
 // navigates to the localhost address on which the application is served.
-pub fn serve_dev(ui_path string, pkg_manager PackageManager, script_name string) !(&os.Process, int) {
+pub fn serve_dev(ui_path string, pkg_manager PackageManager, script string) !(&os.Process, int) {
 	npm_path := os.find_abs_path_of_executable(pkg_manager.str()) or {
 		eprintln('failed to find ${pkg_manager}.\nMake sure  is executable.')
 		exit(0)
@@ -21,9 +21,9 @@ pub fn serve_dev(ui_path string, pkg_manager PackageManager, script_name string)
 	p.set_work_folder(ui_path)
 	p.set_redirect_stdio()
 	if pkg_manager == .pnpm {
-		p.set_args([script_name])
+		p.set_args([script])
 	} else {
-		p.set_args(['run', script_name])
+		p.set_args(['run', script])
 	}
 	p.run()
 	mut port := 0

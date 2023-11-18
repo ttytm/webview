@@ -46,7 +46,7 @@ pub struct ServeDevOptions {
 	// vfmt off
 	pkg_manager serve.PackageManager // .node || .yarn || .pnpm
 	// vfmt on
-	script_name string = 'dev'
+	script string = 'dev' // name of the script(specified in package.json) that runs the dev instance.
 }
 
 // A Hint that is passed to the Webview 'set_size' method to determine the window sizing behavior.
@@ -165,7 +165,7 @@ pub fn (w &Webview) set_html(html string) {
 // // Runs `npm run dev` in the `ui` directory.
 // w.serve_dev('ui')!
 // // Runs `yarn run start` in the `ui` directory (specifying an absolute path).
-// w.serve_dev(os.join_path(@VMODROOT, 'ui'), pkg_manager: 'yarn', script_name: 'start')!
+// w.serve_dev(os.join_path(@VMODROOT, 'ui'), pkg_manager: 'yarn', script: 'start')!
 // ```
 pub fn (mut w Webview) serve_dev(ui_path string, opts ServeDevOptions) ! {
 	if !isnil(w.proc) {
@@ -174,7 +174,7 @@ pub fn (mut w Webview) serve_dev(ui_path string, opts ServeDevOptions) ! {
 	arguments: `${w.proc.args.join(' ')}`
 	directory: `${w.proc.work_folder}`')
 	}
-	mut proc, port := serve.serve_dev(ui_path, opts.pkg_manager, opts.script_name)!
+	mut proc, port := serve.serve_dev(ui_path, opts.pkg_manager, opts.script)!
 	w.proc = proc
 	w.navigate('http://localhost:${port}')
 }

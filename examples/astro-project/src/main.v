@@ -21,7 +21,7 @@ fn main() {
 	ui_path := os.join_path(@VMODROOT, 'ui')
 	$if dev ? {
 		w.serve_dev(ui_path)!
-		// w.serve_dev(ui_path, pkg_manager: .yarn)! // `w.serve_dev(ui_path)!` works with `yarn` as well.
+		// w.serve_dev(ui_path, pkg_manager: .yarn)!
 		// w.serve_dev(ui_path, pkg_manager: .pnpm)!
 	} $else {
 		build_path := os.join_path(ui_path, 'dist')

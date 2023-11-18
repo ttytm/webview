@@ -301,7 +301,9 @@ pub fn (e &Event) get_arg[T](idx int) !T {
 	}
 }
 
-// open opens a path or URL with the system's default app.
+// open opens a path or URL with the system's default application.
+// Use a bind function to make it available in JavaScript.
+// Example: w.bind_opt[voidptr]('open', ui.open)
 pub fn open(e &Event) ! {
 	url := e.get_arg[string](0)!
 	os.open_uri(url)!

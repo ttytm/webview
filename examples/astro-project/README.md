@@ -4,6 +4,10 @@ This example uses Astro for the UI.
 The readme below shows how to run it in a development environment or built into a static site.
 The process works with `npm`, `yarn` or `pnpm`.
 
+<div align="center">
+  <img width="840" alt="Screenshot" src="https://github.com/ttytm/webview/assets/34311583/17a4fbe6-e27b-4f05-8841-21086994708c">
+</div>
+
 ## Run
 
 Move into the examples directory

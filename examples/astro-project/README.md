@@ -10,6 +10,12 @@ The process works with `npm`, `yarn` or `pnpm`.
 
 ## Run
 
+> [!NOTE]
+> This example uses npm by default.
+> When switching to another package manager, you can delete the current package lock file, i.e.
+> `package-lock.json` for npm and, if you've already run the package manager's install command,
+> the `npm_modules` directory.
+
 Move into the examples directory
 
 ```sh
@@ -46,6 +52,15 @@ cd examples/astro-project
 <details>
 <summary><b>yarn</b></summary>
 
+- Update `src/main.v`
+
+  https://github.com/ttytm/webview/blob/14e87cdc771943fb8b6381bfd737f6a26250cbd7/examples/astro-project/src/main.v#L23-L25
+
+  ```v
+  // w.serve_dev(ui_path)!
+  w.serve_dev(ui_path, pkg_manager: .yarn)! // <- specify yarn as package manager.
+  ```
+
 - Install the dependencies
 
   ```sh
@@ -75,7 +90,7 @@ cd examples/astro-project
 
 - Update `src/main.v`
 
-  https://github.com/ttytm/webview/blob/3e7f26b82df254871ac21f26d370122f9752e969/examples/astro-project/src/main.v#L22-L24
+  https://github.com/ttytm/webview/blob/14e87cdc771943fb8b6381bfd737f6a26250cbd7/examples/astro-project/src/main.v#L23-L25
 
   ```v
   // w.serve_dev(ui_path)!
@@ -106,9 +121,3 @@ cd examples/astro-project
   ```
 
 </details>
-
-> [!NOTE]
-> This example uses npm by default.
-> When switching to another package manager, you can delete the current package lock file, i.e.
-> `package-lock.json` for npm and, if you've already run the package manager's install command,
-> the `npm_modules` directory.

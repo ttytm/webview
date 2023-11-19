@@ -140,14 +140,14 @@ file and on its [vdoc site](https://ttytm.github.io/webview/webview.html).
 > [!NOTE]
 > The debug feature currently works on Linux and Windows.
 
-Use the `webview_debug` flag to enable developer tools -
-enabling _right click_ <kbd>Inspect Element</kbd> and `console.log` prints to the terminal. E.g.:
+Use the `webview_debug` flag to enable developer tools - this enables the Web Inspector(allowing for e.g., _right click_ <kbd>Inspect Element</kbd>)
+and `console.log` prints to the terminal. E.g.:
 
 ```sh
 v -d webview_debug run .
 ```
 
-Alternatively, control the debug mode explicitly for a window by using the debug parameter.
+Alternatively, control the debug mode explicitly for a window by using the optional debug argument.
 
 ```v ignore
 webview.create() // enabled when the application was build with `-d webview_debug`

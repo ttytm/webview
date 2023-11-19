@@ -30,6 +30,7 @@ fn main() {
 
 	// Run and wait until the window gets closed.
 	w.run()
-	// Detroy the window, in case of `-d dev` end npm process, clear up resources.
+	// Destroy the window, clear up resources.
+	// In case of running with `-d dev` this also ends the npm background process.
 	w.destroy()
 }

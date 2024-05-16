@@ -2,37 +2,50 @@ name: Docs
 
 on:
   push:
-    branches: [main]
+    paths-ignore: ['**.yml', '!.github/workflows/docs.yml']
+  pull_request:
     paths-ignore: ['**.yml', '!.github/workflows/docs.yml']
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref_name != 'main' }}
-
 jobs:
-  deploy:
-    if: github.repository == 'ttytm/webview'
+  build:
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref_name == 'main' && github.sha || github.ref }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup V
+        run: |
+          curl -Lo v_linux.zip https://github.com/vlang/v/releases/latest/download/v_linux.zip
+          unzip -o v_linux.zip
+          mv v ~/v
+          ~/v/v symlink
+      - name: Build docs
+        run: ./build.vsh docs
+      - name: Setup pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        if: github.event_name == 'push' && github.ref_name == 'main' && github.repository == 'ttytm/webview'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_docs'
+
+  deploy:
+    if: github.event_name == 'push' && github.ref_name == 'main' && github.repository == 'ttytm/webview'
+    needs: build
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: ${{ github.ref_name != 'main' }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     permissions:
       contents: read
       pages: write
       id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup pages
-        uses: actions/configure-pages@v5
-      - name: Setup V
-        uses: vlang/setup-v@v1.4
-      - name: Build docs
-        run: ./build.vsh docs
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '_docs'
       - name: Deploy to GitHub pages
         id: deployment
         uses: actions/deploy-pages@v4

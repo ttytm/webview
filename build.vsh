@@ -6,17 +6,15 @@ import time
 import net.http
 import regex
 
-const (
-	lib_url = 'https://raw.githubusercontent.com/webview/webview/master'
-	lib_dir = '${@VMODROOT}/src'
-	cxx     = if _ := find_abs_path_of_executable('g++') {
-		'g++'
-	} else if _ := find_abs_path_of_executable('clang++') {
-		'clang++'
-	} else {
-		panic("Can't find C++ compiler. Make sure g++ or clang++ is executable.")
-	}
-)
+const lib_url = 'https://raw.githubusercontent.com/webview/webview/master'
+const lib_dir = '${@VMODROOT}/src'
+const cxx = if _ := find_abs_path_of_executable('g++') {
+	'g++'
+} else if _ := find_abs_path_of_executable('clang++') {
+	'clang++'
+} else {
+	panic("Can't find C++ compiler. Make sure g++ or clang++ is executable.")
+}
 
 // == Build Docs ==============================================================
 

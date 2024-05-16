@@ -19,8 +19,7 @@ jobs:
         run: |
           curl -Lo v_windows.zip https://github.com/vlang/v/releases/latest/download/v_windows.zip
           7z x v_windows.zip
-          mv v ~/v
-          ~/v/v symlink
+          mv v ~/v && ~/v/v symlink
       - name: Setup V module
         run: |
           bash -c "mkdir -p ~/.vmodules/ttytm && mv webview ~/.vmodules/ttytm/webview"

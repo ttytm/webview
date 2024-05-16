@@ -19,8 +19,7 @@ jobs:
         run: |
           curl -Lo v_macos_arm64.zip https://github.com/vlang/v/releases/latest/download/v_macos_arm64.zip
           unzip -o v_macos_arm64.zip
-          mv v ~/v
-          ~/v/v symlink
+          mv v ~/v && ~/v/v symlink
       - name: Setup V module
         run: |
           mkdir -p ~/.vmodules/ttytm && mv webview ~/.vmodules/ttytm/webview

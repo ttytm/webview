@@ -19,8 +19,7 @@ jobs:
         run: |
           curl -Lo v_linux.zip https://github.com/vlang/v/releases/latest/download/v_linux.zip
           unzip -o v_linux.zip
-          mv v ~/v
-          ~/v/v symlink
+          mv v ~/v && ~/v/v symlink
       - name: Build docs
         run: ./build.vsh docs
       - name: Setup pages
@@ -32,19 +31,19 @@ jobs:
           path: '_docs'
 
   deploy:
+    runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref_name == 'main' && github.repository == 'ttytm/webview'
     needs: build
-    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: ${{ github.ref_name != 'main' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
     steps:
       - name: Deploy to GitHub pages
         id: deployment

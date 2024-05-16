@@ -14,8 +14,7 @@ jobs:
         run: |
           curl -Lo v_linux.zip https://github.com/vlang/v/releases/latest/download/v_linux.zip
           unzip -o v_linux.zip
-          mv v ~/v
-          ~/v/v symlink
+          mv v ~/v && ~/v/v symlink
       - name: Setup dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:

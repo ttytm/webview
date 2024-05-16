@@ -9,8 +9,6 @@ on:
 jobs:
   linux:
     uses: ./.github/workflows/linux.yml
-    permissions:
-      contents: write
 
   macos:
     uses: ./.github/workflows/macos.yml

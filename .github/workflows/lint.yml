@@ -3,38 +3,50 @@ name: Lint
 on:
   workflow_call:
 
-env:
-  MOD_PATH: ~/.vmodules/ttytm/webview
-
 jobs:
   fmt:
     runs-on: ubuntu-latest
     steps:
-      - name: Restore Cache
-        uses: actions/cache/restore@v3
+      - name: Restore cache
+        uses: actions/cache/restore@v4
         with:
           path: |
-            vlang
+            ~/v
             ~/.vmodules
           key: ${{ runner.os }}-${{ github.sha }}
           fail-on-cache-miss: true
-      - name: Setup V
-        uses: vlang/setup-v@v1.3
-      - name: Check Formatting
-        run: v fmt -verify ${{ env.MOD_PATH }}
+      - name: Verify formatting
+        run: ~/v/v fmt -verify ~/.vmodules/ttytm/webview && exit 0 || ~/v/v fmt -diff . && exit 1
 
   vet:
     runs-on: ubuntu-latest
     steps:
-      - name: Restore Cache
-        uses: actions/cache/restore@v3
+      - name: Restore cache
+        uses: actions/cache/restore@v4
         with:
           path: |
-            vlang
+            ~/v
             ~/.vmodules
           key: ${{ runner.os }}-${{ github.sha }}
           fail-on-cache-miss: true
-      - name: Setup V
-        uses: vlang/setup-v@v1.3
-      - name: Run Vet
-        run: v vet -W ${{ env.MOD_PATH }}/src/
+      - name: Vet
+        run: ~/v/v vet -W ~/.vmodules/ttytm/webview
+
+  check-md:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/v
+            ~/.vmodules
+          key: ${{ runner.os }}-${{ github.sha }}
+          fail-on-cache-miss: true
+      - name: Setup dependencies
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libcurl4-openssl-dev
+          version: 1.0
+      - name: Check markdown
+        run: ~/v/v check-md -hide-warnings ~/.vmodules/ttytm/webview

@@ -32,17 +32,20 @@ pub:
 
 @[params]
 pub struct CreateOptions {
+pub:
 	debug  ?bool
 	window voidptr
 }
 
 @[params]
 pub struct ServeStaticOptions {
+pub:
 	port u16 = 4321
 }
 
 @[params]
 pub struct ServeDevOptions {
+pub:
 	// vfmt off
 	pkg_manager serve.PackageManager // .node || .yarn || .pnpm
 	// vfmt on

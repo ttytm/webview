@@ -3,10 +3,6 @@ name: CI Windows
 on:
   workflow_call:
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
   setup:
     runs-on: windows-latest
@@ -23,7 +19,7 @@ jobs:
       - name: Setup V module
         run: |
           bash -c "mkdir -p ~/.vmodules/ttytm && mv webview ~/.vmodules/ttytm/webview"
-          ~/.vmodules/ttytm/webview/build.vsh --silent
+          v run $HOME/.vmodules/ttytm/webview/build.vsh --silent
       - name: Save cache
         uses: actions/cache/save@v4
         with:
@@ -60,9 +56,12 @@ jobs:
         run: v -showcc self && v doctor
       - name: Build examples
         run: |
-          for example_dir in $(find ~/.vmodules/ttytm/webview/examples/* -maxdepth 0 -type d); do
-            cmd="v $example_dir/"
-            [[ "$example_dir" =~ .*"emoji-picker"$ ]] && cmd+="main.v"
-            echo "$cmd"
-            eval "$cmd"
-          done
+          $exampleDirs = Get-ChildItem -Path "$HOME/.vmodules/ttytm/webview/examples" -Depth 0 -Directory
+          foreach ($dir in $exampleDirs) {
+              $cmd = "v $dir"
+              if ($dir.FullName -match "emoji-picker") {
+                  $cmd += "\main.v"
+              }
+              Write-Output $cmd
+              Invoke-Expression $cmd
+          }

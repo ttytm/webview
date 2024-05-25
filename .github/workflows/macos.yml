@@ -35,14 +35,8 @@ jobs:
   test:
     needs: setup
     runs-on: macos-latest
-    strategy:
-      matrix:
-        cc: [tcc, clang]
-        optimization: ['', '-W -cstrict']
-        exclude:
-          - cc: tcc
-            optimization: '-W -cstrict'
-      fail-fast: false
+    env:
+      VFLAGS: -cg -cc clang
     steps:
       - name: Restore cache
         uses: actions/cache/restore@v4

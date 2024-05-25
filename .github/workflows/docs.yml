@@ -32,7 +32,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref_name == 'main' && github.repository == 'ttytm/webview'
+    if: github.event_name != 'pull_request' && github.ref_name == 'main' && github.repository == 'ttytm/webview'
     needs: build
     permissions:
       contents: read

@@ -9,7 +9,11 @@ module webview
 
 $if linux {
 	#pkgconfig gtk+-3.0
-	#pkgconfig webkit2gtk-4.0
+	$if $pkgconfig('webkit2gtk-4.1') {
+		#pkgconfig webkit2gtk-4.1
+	} $else {
+		#pkgconfig webkit2gtk-4.0
+	}
 }
 
 @[typedef]

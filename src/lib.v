@@ -46,10 +46,8 @@ pub:
 @[params]
 pub struct ServeDevOptions {
 pub:
-	// vfmt off
 	pkg_manager serve.PackageManager // .node || .yarn || .pnpm
-	// vfmt on
-	script string = 'dev' // name of the script(specified in package.json) that runs the dev instance.
+	script      string = 'dev' // name of the script(specified in package.json) that runs the dev instance.
 }
 
 // A Hint that is passed to the Webview 'set_size' method to determine the window sizing behavior.

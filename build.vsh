@@ -124,27 +124,27 @@ fn run(cmd cli.Command) ! {
 // == Commands ================================================================
 
 mut cmd := cli.Command{
-	name: 'build.vsh'
-	posix_mode: true
+	name:          'build.vsh'
+	posix_mode:    true
 	required_args: 0
-	pre_execute: fn (cmd cli.Command) ! {
+	pre_execute:   fn (cmd cli.Command) ! {
 		if cmd.args.len > cmd.required_args {
 			eprintln('Unknown commands ${cmd.args}.\n')
 			cmd.execute_help()
 			exit(0)
 		}
 	}
-	execute: run
-	commands: [
+	execute:       run
+	commands:      [
 		cli.Command{
-			name: 'docs'
+			name:        'docs'
 			description: 'Build docs used for GitHub pages.'
-			execute: fn (_ cli.Command) ! {
+			execute:     fn (_ cli.Command) ! {
 				build_docs() or { eprintln('Failed building docs. ${err}') }
 			}
 		},
 	]
-	flags: [
+	flags:         [
 		cli.Flag{
 			flag: .bool
 			name: 'silent'

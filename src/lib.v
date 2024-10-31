@@ -57,9 +57,9 @@ pub enum Hint {
 	// Window size can not be changed by a user.
 	fixed = C.WEBVIEW_HINT_FIXED
 	// Width and height are minimum bounds.
-	min   = C.WEBVIEW_HINT_MIN
+	min = C.WEBVIEW_HINT_MIN
 	// Width and height are maximum bounds.
-	max   = C.WEBVIEW_HINT_MAX
+	max = C.WEBVIEW_HINT_MAX
 }
 
 pub const no_result = unsafe { nil }
@@ -79,7 +79,7 @@ pub fn create(opts CreateOptions) &Webview {
 	dbg := if opt := opts.debug {
 		opt
 	} else {
-		webview.debug
+		debug
 	}
 	return &Webview{C.webview_create(int(dbg), opts.window), unsafe { nil }}
 }

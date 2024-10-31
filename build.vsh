@@ -6,6 +6,7 @@ import time
 import net.http
 import regex
 
+const lib_url = 'https://raw.githubusercontent.com/webview/webview/refs/tags/0.10.0'
 const lib_dir = '${@VMODROOT}/src'
 const cxx = if _ := find_abs_path_of_executable('g++') {
 	'g++'
@@ -78,8 +79,8 @@ fn download(silent bool) {
 	if !silent {
 		spawn spinner(dl_spinner)
 	}
-	http.download_file('https://raw.githubusercontent.com/malisipi/mui/refs/heads/main/webview/webview/webview.h', '${lib_dir}/webview.h') or { panic(err) }
-	http.download_file('https://raw.githubusercontent.com/webview/webview/refs/heads/master/core/src/webview.cc', '${lib_dir}/webview.cc') or { panic(err) }
+	http.download_file('${lib_url}/webview.h', '${lib_dir}/webview.h') or { panic(err) }
+	http.download_file('${lib_url}/webview.cc', '${lib_dir}/webview.cc') or { panic(err) }
 	download_webview2()
 	dl_spinner <- true
 }

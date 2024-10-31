@@ -6,7 +6,7 @@ import time
 import net.http
 import regex
 
-const lib_url = 'https://raw.githubusercontent.com/webview/webview/master'
+const lib_url = 'https://raw.githubusercontent.com/webview/webview/refs/tags/0.10.0'
 const lib_dir = '${@VMODROOT}/src'
 const cxx = if _ := find_abs_path_of_executable('g++') {
 	'g++'

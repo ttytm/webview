@@ -41,13 +41,14 @@ fn build_docs() ! {
 
 // == Download & Build Library ================================================
 
-fn spinner(ch chan bool) {
+fn spinner(ch chan bool, silent bool) {
+	if silent {
+		return
+	}
 	runes := [`-`, `\\`, `|`, `/`]
 	mut pos := 0
 	for {
-		mut finished := false
-		ch.try_pop(mut finished)
-		if finished {
+		if ch.closed {
 			print('\r')
 			return
 		}
@@ -75,14 +76,12 @@ fn download_webview2() {
 
 fn download(silent bool) {
 	println('Downloading...')
-	dl_spinner := chan bool{cap: 1}
-	if !silent {
-		spawn spinner(dl_spinner)
-	}
+	spinner_ch := chan bool{}
+	spawn spinner(spinner_ch, silent)
+	defer { spinner_ch.close() }
 	http.download_file('${lib_url}/webview.h', '${lib_dir}/webview.h') or { panic(err) }
 	http.download_file('${lib_url}/webview.cc', '${lib_dir}/webview.cc') or { panic(err) }
 	download_webview2()
-	dl_spinner <- true
 }
 
 fn build(silent bool) {
@@ -99,12 +98,10 @@ fn build(silent bool) {
 		cmd += ' -I${lib_dir}/webview2/build/native/include'
 	}
 	println('Building...')
-	build_spinner := chan bool{cap: 1}
-	if !silent {
-		spawn spinner(build_spinner)
-	}
+	spinner_ch := chan bool{}
+	spawn spinner(spinner_ch, silent)
+	defer { spinner_ch.close() }
 	build_res := execute(cmd)
-	build_spinner <- true
 	if build_res.exit_code != 0 {
 		eprintln(build_res.output)
 		exit(1)

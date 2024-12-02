@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Emoji Picker Desktop App in under 50 lines of Code</title>
+		<title>V webview examples</title>
 		<style>
 			body {
 				background: linear-gradient(to right, #274060, #1b2845);
@@ -54,10 +54,12 @@
 	<body>
 		<div id="container">
 			<h1>V webview examples</h1>
+
 			<section>
 				<h2>1. Simple V function Call</h2>
 				<button onclick="handleToggle()">Toggle Setting <span id="toggle-state">on</span></button>
 			</section>
+
 			<section>
 				<h2>2. Sent data to V</h2>
 				<form id="login">
@@ -66,6 +68,7 @@
 				</form>
 				<sub id="submit-info"></sub>
 			</section>
+
 			<section>
 				<h2>3. Async operations</h2>
 				<p>Return results from time extensive tasks in V without blocking the UI</p>
@@ -76,6 +79,7 @@
 				<button onclick="fetchArticle()">Fetch another Article</button>
 			</section>
 		</div>
+
 		<script>
 			let initialized = false;
 			let settings = { toggle: false };

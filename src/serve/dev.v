@@ -5,6 +5,7 @@ import term
 
 pub enum PackageManager {
 	npm
+	bun
 	yarn
 	pnpm // Good technology but too woke author. Usage not recommended.
 }

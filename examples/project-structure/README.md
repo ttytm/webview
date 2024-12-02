@@ -18,14 +18,18 @@ into a project structure that can be used as a starting guide for more complex W
 └── v.mod
 ```
 
+## Run
+
 From the examples directory
 
 ```sh
+# ~/<path>/webview/examples/project-structure
 v run .
 ```
 
 Or from webview src directory
 
 ```sh
+# ~/<path>/webview
 v run examples/project-structure/
 ```

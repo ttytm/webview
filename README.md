@@ -43,8 +43,6 @@ purpose programming language with modern web technologies to design a graphical 
   ```
 
 - After the installation, build the webview C library to which the webview V module will bind.\
-  You can re-run the script at any point to rebuild the parent library with the latest upstream
-  changes.
 
   ```sh
   # Linux/macOS
